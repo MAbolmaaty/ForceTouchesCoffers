@@ -1,0 +1,24 @@
+{
+  "@@locale": "en",
+
+  "login": "Login",
+  "@login": {
+    "description": ""
+  },
+  "emailOrPhoneNumber": "Email or Phone Number",
+  "@emailOrPhoneNumber": {
+    "description": ""
+  },
+  "enterEmailOrPhoneNumber": "Please enter Email or Phone Number",
+  "@enterEmailOrPhoneNumber": {
+    "description": ""
+  },
+  "password": "Password",
+  "@password": {
+    "description": ""
+  },
+  "rememberMe": "Remember Me",
+  "@rememberMe": {
+    "description": ""
+  }
+}

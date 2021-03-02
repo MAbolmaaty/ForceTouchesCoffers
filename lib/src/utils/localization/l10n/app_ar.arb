@@ -1,0 +1,24 @@
+{
+  "@@locale": "ar",
+
+  "login": "الرئيسية",
+  "@login": {
+    "description": ""
+  },
+  "emailOrPhoneNumber": "البريد الالكتروني او رقم الجوال",
+  "@emailOrPhoneNumber": {
+    "description": ""
+  },
+  "enterEmailOrPhoneNumber": "من فضلك ادخل البريد الالكتروني او رقم الجوال",
+  "@enterEmailOrPhoneNumber": {
+    "description": ""
+  },
+  "password": "كلمة المرور",
+  "@password": {
+    "description": ""
+  },
+  "rememberMe": "تذكرني لاحقا",
+  "@rememberMe": {
+    "description": ""
+  }
+}
