@@ -5,20 +5,28 @@
   "@login": {
     "description": ""
   },
-  "emailOrPhoneNumber": "Email or Phone Number",
-  "@emailOrPhoneNumber": {
+  "emailOrUsername": "Email or Username",
+  "@emailOrUsername": {
     "description": ""
   },
-  "enterEmailOrPhoneNumber": "Please enter Email or Phone Number",
-  "@enterEmailOrPhoneNumber": {
+  "enterEmailOrUsername": "Please enter Email or Username",
+  "@enterEmailOrUsername": {
     "description": ""
   },
   "password": "Password",
   "@password": {
     "description": ""
   },
+  "enterPassword": "Please enter Password",
+  "@enterPassword": {
+    "description": ""
+  },
   "rememberMe": "Remember Me",
   "@rememberMe": {
+    "description": ""
+  },
+  "authenticationFailed": "Authentication Failed",
+  "@authenticationFailed": {
     "description": ""
   },
   "salaries": "Salaries",

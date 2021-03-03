@@ -5,20 +5,28 @@
   "@login": {
     "description": ""
   },
-  "emailOrPhoneNumber": "البريد الالكتروني او رقم الجوال",
-  "@emailOrPhoneNumber": {
+  "emailOrUsername": "البريد الالكتروني او اسم المستخدم",
+  "@emailOrUsername": {
     "description": ""
   },
-  "enterEmailOrPhoneNumber": "من فضلك ادخل البريد الالكتروني او رقم الجوال",
-  "@enterEmailOrPhoneNumber": {
+  "enterEmailOrUsername": "من فضلك ادخل البريد الالكتروني او اسم المستخدم",
+  "@enterEmailOrUsername": {
     "description": ""
   },
   "password": "كلمة المرور",
   "@password": {
     "description": ""
   },
+  "enterPassword": "من فضلك ادخل كلمة المرور",
+  "@enterPassword": {
+    "description": ""
+  },
   "rememberMe": "تذكرني لاحقا",
   "@rememberMe": {
+    "description": ""
+  },
+  "authenticationFailed": "فشل تسجيل الدخول",
+  "@authenticationFailed": {
     "description": ""
   },
   "salaries": "الرواتب",
