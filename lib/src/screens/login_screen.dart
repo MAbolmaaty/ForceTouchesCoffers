@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:force_touches_financial/app_theme.dart';
+import 'package:force_touches_financial/src/screens/main_screen.dart';
 
 class LoginScreen extends StatelessWidget {
   @override
@@ -164,7 +165,12 @@ class LoginScreen extends StatelessWidget {
                         margin:
                             EdgeInsets.symmetric(vertical: 16.0, horizontal: 48.0),
                         child: RaisedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.of(context)
+                                .pushAndRemoveUntil(
+                                MainScreen.route(),
+                                    (route) => false);
+                          },
                           color: AppTheme.kPrimaryColor,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(16.0)),

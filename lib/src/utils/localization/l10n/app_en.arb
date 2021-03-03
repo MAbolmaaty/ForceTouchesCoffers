@@ -20,5 +20,21 @@
   "rememberMe": "Remember Me",
   "@rememberMe": {
     "description": ""
+  },
+  "salaries": "Salaries",
+  "@salaries": {
+    "description": ""
+  },
+  "bills": "Bills",
+  "@bills": {
+    "description": ""
+  },
+  "treasury": "Treasury",
+  "@treasury": {
+    "description": ""
+  },
+  "saudiCurrency": "SAR",
+  "@saudiCurrency": {
+    "description": ""
   }
 }

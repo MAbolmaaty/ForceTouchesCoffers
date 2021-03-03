@@ -20,5 +20,21 @@
   "rememberMe": "تذكرني لاحقا",
   "@rememberMe": {
     "description": ""
+  },
+  "salaries": "الرواتب",
+  "@salaries": {
+    "description": ""
+  },
+  "bills": "الفواتير",
+  "@bills": {
+    "description": ""
+  },
+  "treasury": "الخزينة",
+  "@treasury": {
+    "description": ""
+  },
+  "saudiCurrency": "ريال سعودي",
+  "@saudiCurrency": {
+    "description": ""
   }
 }
