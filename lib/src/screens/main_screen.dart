@@ -40,6 +40,7 @@ class MainScreen extends StatelessWidget {
               key: _refreshIndicatorKey,
               onRefresh: _fetchData,
               child: SingleChildScrollView(
+                physics: ClampingScrollPhysics(),
                 child:
                     Consumer<CoffersApi>(builder: (context, coffersApi, child) {
                   if (coffersApi.coffersLoading == CoffersLoading.Failed) {
