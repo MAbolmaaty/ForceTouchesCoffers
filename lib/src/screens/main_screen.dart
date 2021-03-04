@@ -43,6 +43,8 @@ class MainScreen extends StatelessWidget {
                 physics: ClampingScrollPhysics(),
                 child:
                     Consumer<CoffersApi>(builder: (context, coffersApi, child) {
+                  print("///////////////////////////////" +
+                      AppLocalizations.of(context).localeName);
                   if (coffersApi.coffersLoading == CoffersLoading.Failed) {
                     UserPreferences().removeUser().then((value) =>
                         Navigator.of(context).pushAndRemoveUntil(
@@ -85,13 +87,14 @@ class MainScreen extends StatelessWidget {
                                   ),
                                 ]),
                             GestureDetector(
-                              onTap: (){
+                              onTap: () {
                                 coffersApi.loggingOut();
                                 UserPreferences().removeUser().then((value) =>
                                     Navigator.of(context).pushAndRemoveUntil(
                                         LoginScreen.route(), (route) => false));
                               },
                               child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Visibility(
                                     visible: coffersApi.logout,
@@ -99,12 +102,17 @@ class MainScreen extends StatelessWidget {
                                       height: 20,
                                       width: 20,
                                       child: CircularProgressIndicator(
-                                          backgroundColor: AppTheme.kPrimaryColor,
+                                          backgroundColor:
+                                              AppTheme.kPrimaryColor,
                                           strokeWidth: 2,
-                                          valueColor: new AlwaysStoppedAnimation<Color>(Colors.white)),
+                                          valueColor:
+                                              new AlwaysStoppedAnimation<Color>(
+                                                  Colors.white)),
                                     ),
                                   ),
-                                  SizedBox(width: 8.0,),
+                                  SizedBox(
+                                    width: 8.0,
+                                  ),
                                   Text(
                                     AppLocalizations.of(context).logout,
                                     style: TextStyle(
@@ -112,12 +120,22 @@ class MainScreen extends StatelessWidget {
                                         fontFamily: 'Cairo',
                                         color: Colors.white),
                                   ),
-                                  SizedBox(width: 8.0,),
-                                  Icon(
-                                    Icons.logout,
-                                    size: 24,
-                                    color: Colors.white,
+                                  SizedBox(
+                                    width: 8.0,
                                   ),
+                                  SizedBox(
+                                    height: 24,
+                                    width: 24,
+                                    child: AppLocalizations.of(context)
+                                                .localeName ==
+                                            'ar'
+                                        ? Image.asset(
+                                            'assets/images/LOGOUT_AR.png',
+                                          )
+                                        : Image.asset(
+                                            'assets/images/LOGOUT_EN.png',
+                                          ),
+                                  )
                                 ],
                               ),
                             ),
@@ -158,6 +176,7 @@ class MainScreen extends StatelessWidget {
                                   color: Colors.white,
                                   letterSpacing: 2.0,
                                   fontSize: 13,
+                                  fontFamily: 'Cairo',
                                 ),
                                 alignLabelWithHint: true,
                                 disabledBorder: OutlineInputBorder(
@@ -176,23 +195,36 @@ class MainScreen extends StatelessWidget {
                                       ? coffersApi.coffersResponseModel.salaries
                                       : '...',
                                   style: TextStyle(
-                                      color: Colors.white, fontSize: 16),
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                      fontFamily: 'Cairo'),
                                 ),
                               ),
                             ),
                             Align(
-                              alignment: Alignment.centerRight,
+                              alignment:
+                                  AppLocalizations.of(context).localeName ==
+                                          'ar'
+                                      ? Alignment.centerLeft
+                                      : Alignment.centerRight,
                               child: Container(
                                 margin:
                                     EdgeInsets.only(right: 16.0, left: 16.0),
                                 child: Text(
-                                  'SAR',
-                                  style: TextStyle(color: Colors.white),
+                                  AppLocalizations.of(context).saudiCurrency,
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12,
+                                      fontFamily: 'Cairo'),
                                 ),
                               ),
                             ),
                             Align(
-                              alignment: Alignment.centerLeft,
+                              alignment:
+                                  AppLocalizations.of(context).localeName ==
+                                          'ar'
+                                      ? Alignment.centerRight
+                                      : Alignment.centerLeft,
                               child: Container(
                                 margin:
                                     EdgeInsets.only(right: 16.0, left: 16.0),
@@ -205,7 +237,7 @@ class MainScreen extends StatelessWidget {
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontFamily: 'Cairo',
-                                      fontSize: 14),
+                                      fontSize: 12),
                                 ),
                               ),
                             ),
@@ -257,13 +289,18 @@ class MainScreen extends StatelessWidget {
                               ),
                             ),
                             Align(
-                              alignment: Alignment.centerRight,
+                              alignment:
+                                  AppLocalizations.of(context).localeName ==
+                                          'ar'
+                                      ? Alignment.centerLeft
+                                      : Alignment.centerRight,
                               child: Container(
                                 margin:
                                     EdgeInsets.only(right: 16.0, left: 16.0),
                                 child: Text(
-                                  'SAR',
-                                  style: TextStyle(color: Colors.white),
+                                  AppLocalizations.of(context).saudiCurrency,
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 12.0),
                                 ),
                               ),
                             ),
@@ -316,13 +353,18 @@ class MainScreen extends StatelessWidget {
                               ),
                             ),
                             Align(
-                              alignment: Alignment.centerRight,
+                              alignment:
+                                  AppLocalizations.of(context).localeName ==
+                                          'ar'
+                                      ? Alignment.centerLeft
+                                      : Alignment.centerRight,
                               child: Container(
                                 margin:
                                     EdgeInsets.only(right: 16.0, left: 16.0),
                                 child: Text(
-                                  'SAR',
-                                  style: TextStyle(color: Colors.white),
+                                  AppLocalizations.of(context).saudiCurrency,
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 12.0),
                                 ),
                               ),
                             ),
@@ -364,7 +406,8 @@ class MainScreen extends StatelessWidget {
                                         bottom: 56,
                                         left: 16,
                                         right: 16),
-                                    labelText: 'Ibrahim',
+                                    labelText:
+                                        AppLocalizations.of(context).ibrahim,
                                     prefixIcon: SizedBox(
                                       width:
                                           (MediaQuery.of(context).size.width *
@@ -374,7 +417,7 @@ class MainScreen extends StatelessWidget {
                                     labelStyle: TextStyle(
                                       color: Colors.white,
                                       letterSpacing: 2.0,
-                                      fontSize: 12,
+                                      fontSize: 14,
                                     ),
                                     alignLabelWithHint: true,
                                     disabledBorder: OutlineInputBorder(
@@ -404,8 +447,10 @@ class MainScreen extends StatelessWidget {
                                   child: Container(
                                     margin: EdgeInsets.only(top: 48.0),
                                     child: Text(
-                                      'SAR',
-                                      style: TextStyle(color: Colors.white),
+                                      AppLocalizations.of(context)
+                                          .saudiCurrency,
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 10),
                                     ),
                                   ),
                                 ),
@@ -433,7 +478,8 @@ class MainScreen extends StatelessWidget {
                                         bottom: 56,
                                         left: 16,
                                         right: 16),
-                                    labelText: 'Abdelaziz',
+                                    labelText:
+                                        AppLocalizations.of(context).abdelaziz,
                                     prefixIcon: SizedBox(
                                       width:
                                           (MediaQuery.of(context).size.width *
@@ -443,7 +489,7 @@ class MainScreen extends StatelessWidget {
                                     labelStyle: TextStyle(
                                       color: Colors.white,
                                       letterSpacing: 2.0,
-                                      fontSize: 12,
+                                      fontSize: 14,
                                     ),
                                     alignLabelWithHint: true,
                                     disabledBorder: OutlineInputBorder(
@@ -473,8 +519,10 @@ class MainScreen extends StatelessWidget {
                                   child: Container(
                                     margin: EdgeInsets.only(top: 48.0),
                                     child: Text(
-                                      'SAR',
-                                      style: TextStyle(color: Colors.white),
+                                      AppLocalizations.of(context)
+                                          .saudiCurrency,
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 10),
                                     ),
                                   ),
                                 ),
@@ -507,7 +555,8 @@ class MainScreen extends StatelessWidget {
                                         bottom: 56,
                                         left: 16,
                                         right: 16),
-                                    labelText: 'Bahaa',
+                                    labelText:
+                                        AppLocalizations.of(context).bahaa,
                                     prefixIcon: SizedBox(
                                       width:
                                           (MediaQuery.of(context).size.width *
@@ -517,7 +566,7 @@ class MainScreen extends StatelessWidget {
                                     labelStyle: TextStyle(
                                       color: Colors.white,
                                       letterSpacing: 2.0,
-                                      fontSize: 12,
+                                      fontSize: 14,
                                     ),
                                     alignLabelWithHint: true,
                                     disabledBorder: OutlineInputBorder(
@@ -547,8 +596,10 @@ class MainScreen extends StatelessWidget {
                                   child: Container(
                                     margin: EdgeInsets.only(top: 48.0),
                                     child: Text(
-                                      'SAR',
-                                      style: TextStyle(color: Colors.white),
+                                      AppLocalizations.of(context)
+                                          .saudiCurrency,
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 10),
                                     ),
                                   ),
                                 ),
@@ -576,7 +627,8 @@ class MainScreen extends StatelessWidget {
                                         bottom: 56,
                                         left: 16,
                                         right: 16),
-                                    labelText: 'Abdelrahman',
+                                    labelText: AppLocalizations.of(context)
+                                        .abdelrahman,
                                     prefixIcon: SizedBox(
                                       width:
                                           (MediaQuery.of(context).size.width *
@@ -586,7 +638,7 @@ class MainScreen extends StatelessWidget {
                                     labelStyle: TextStyle(
                                       color: Colors.white,
                                       letterSpacing: 2.0,
-                                      fontSize: 12,
+                                      fontSize: 14,
                                     ),
                                     alignLabelWithHint: true,
                                     disabledBorder: OutlineInputBorder(
@@ -616,8 +668,10 @@ class MainScreen extends StatelessWidget {
                                   child: Container(
                                     margin: EdgeInsets.only(top: 48.0),
                                     child: Text(
-                                      'SAR',
-                                      style: TextStyle(color: Colors.white),
+                                      AppLocalizations.of(context)
+                                          .saudiCurrency,
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 10),
                                     ),
                                   ),
                                 ),
@@ -644,7 +698,7 @@ class MainScreen extends StatelessWidget {
                             Expanded(
                               flex: 1,
                               child: Text(
-                                'Coffers Total',
+                                AppLocalizations.of(context).coffersTotal,
                                 style: TextStyle(
                                     fontFamily: 'Cairo',
                                     fontSize: 14,
@@ -666,7 +720,7 @@ class MainScreen extends StatelessWidget {
                               width: 8.0,
                             ),
                             Text(
-                              'SAR',
+                              AppLocalizations.of(context).saudiCurrency,
                               style: TextStyle(
                                   fontFamily: 'Cairo',
                                   fontSize: 12,

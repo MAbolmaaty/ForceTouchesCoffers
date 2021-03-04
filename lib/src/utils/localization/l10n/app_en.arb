@@ -52,5 +52,25 @@
   "logout": "Logout",
   "@logout": {
     "description": ""
+  },
+  "ibrahim": "Ibrahim",
+  "@ibrahim": {
+    "description": ""
+  },
+  "abdelaziz": "Abdelaziz",
+  "@abdelaziz": {
+    "description": ""
+  },
+  "bahaa": "Bahaa",
+  "@bahaa": {
+    "description": ""
+  },
+  "abdelrahman": "Abdelrahman",
+  "@abdelrahman": {
+    "description": ""
+  },
+  "coffersTotal": "Coffers Total",
+  "@coffersTotal": {
+    "description": ""
   }
 }

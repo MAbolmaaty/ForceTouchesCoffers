@@ -52,5 +52,25 @@
   "logout": "تسجيل خروج",
   "@logout": {
     "description": ""
+  },
+  "ibrahim": "ابراهيم",
+  "@ibrahim": {
+    "description": ""
+  },
+  "abdelaziz": "عبد العزيز",
+  "@abdelaziz": {
+    "description": ""
+  },
+  "bahaa": "بهاء",
+  "@bahaa": {
+    "description": ""
+  },
+  "abdelrahman": "عبد الرحمن",
+  "@abdelrahman": {
+    "description": ""
+  },
+  "coffersTotal": "مجموع الخزائن",
+  "@coffersTotal": {
+    "description": ""
   }
 }
