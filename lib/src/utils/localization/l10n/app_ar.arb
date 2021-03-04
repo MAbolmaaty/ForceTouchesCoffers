@@ -44,5 +44,13 @@
   "saudiCurrency": "ريال سعودي",
   "@saudiCurrency": {
     "description": ""
+  },
+  "lastUpdate": "اخر تحديث",
+  "@lastUpdate": {
+    "description": ""
+  },
+  "logout": "تسجيل خروج",
+  "@logout": {
+    "description": ""
   }
 }

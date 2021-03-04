@@ -9,6 +9,10 @@ import 'package:force_touches_financial/src/utils/preferences/user_preferences.d
 import 'package:provider/provider.dart';
 
 class LoginScreen extends StatelessWidget {
+  static Route<dynamic> route() => MaterialPageRoute(
+    builder: (context) => LoginScreen(),
+  );
+
   final formKey = GlobalKey<FormState>();
   final sKey = GlobalKey<ScaffoldState>();
 

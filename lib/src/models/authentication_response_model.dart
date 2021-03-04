@@ -30,7 +30,7 @@ class User {
   String updatedAt;
   int iV;
   Role role;
-  String id;
+  int id;
 
   User(
       {this.confirmed,
@@ -84,7 +84,7 @@ class Role {
   String description;
   String type;
   int iV;
-  String id;
+  int id;
 
   Role({this.sId, this.name, this.description, this.type, this.iV, this.id});
 

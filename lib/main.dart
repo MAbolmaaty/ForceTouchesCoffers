@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:force_touches_financial/app_theme.dart';
 import 'package:force_touches_financial/src/screens/login_screen.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:force_touches_financial/src/screens/main_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -19,7 +20,7 @@ class MyApp extends StatelessWidget {
         accentColor: AppTheme.kPrimaryColor,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: LoginScreen(),
+      home: MainScreen(),
     );
   }
 }

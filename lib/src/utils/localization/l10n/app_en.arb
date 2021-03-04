@@ -44,5 +44,13 @@
   "saudiCurrency": "SAR",
   "@saudiCurrency": {
     "description": ""
+  },
+  "lastUpdate": "Last Update",
+  "@lastUpdate": {
+    "description": ""
+  },
+  "logout": "Logout",
+  "@logout": {
+    "description": ""
   }
 }
