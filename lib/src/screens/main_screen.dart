@@ -43,8 +43,6 @@ class MainScreen extends StatelessWidget {
                 physics: ClampingScrollPhysics(),
                 child:
                     Consumer<CoffersApi>(builder: (context, coffersApi, child) {
-                  print("///////////////////////////////" +
-                      AppLocalizations.of(context).localeName);
                   if (coffersApi.coffersLoading == CoffersLoading.Failed) {
                     UserPreferences().removeUser().then((value) =>
                         Navigator.of(context).pushAndRemoveUntil(
