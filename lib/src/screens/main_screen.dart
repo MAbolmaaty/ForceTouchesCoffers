@@ -85,30 +85,20 @@ class MainScreen extends StatelessWidget {
                                         fontFamily: 'Cairo'),
                                   ),
                                 ]),
-                            GestureDetector(
-                              onTap: () {
+                            ElevatedButton(
+                              onPressed: () {
                                 coffersApi.loggingOut();
                                 UserPreferences().removeUser().then((value) =>
                                     Navigator.of(context).pushAndRemoveUntil(
                                         LoginScreen.route(), (route) => false));
                               },
+                              style: ElevatedButton.styleFrom(
+                                primary: AppTheme.kPrimaryColor,
+                                elevation: 0.0,
+                              ),
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  Visibility(
-                                    visible: coffersApi.logout,
-                                    child: SizedBox(
-                                      height: 20,
-                                      width: 20,
-                                      child: CircularProgressIndicator(
-                                          backgroundColor:
-                                              AppTheme.kPrimaryColor,
-                                          strokeWidth: 2,
-                                          valueColor:
-                                              new AlwaysStoppedAnimation<Color>(
-                                                  Colors.white)),
-                                    ),
-                                  ),
                                   SizedBox(
                                     width: 8.0,
                                   ),
