@@ -4,6 +4,7 @@ import 'package:force_touches_financial/app_theme.dart';
 import 'package:force_touches_financial/src/screens/login_screen.dart';
 import 'package:force_touches_financial/src/utils/networking/coffers_api.dart';
 import 'package:force_touches_financial/src/utils/preferences/user_preferences.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class MainScreen extends StatelessWidget {
@@ -43,8 +44,6 @@ class MainScreen extends StatelessWidget {
                 physics: ClampingScrollPhysics(),
                 child:
                     Consumer<CoffersApi>(builder: (context, coffersApi, child) {
-                  print("///////////////////////////////" +
-                      AppLocalizations.of(context).localeName);
                   if (coffersApi.coffersLoading == CoffersLoading.Failed) {
                     UserPreferences().removeUser().then((value) =>
                         Navigator.of(context).pushAndRemoveUntil(
@@ -72,14 +71,14 @@ class MainScreen extends StatelessWidget {
                                         fontFamily: 'Cairo'),
                                   ),
                                   Text(
-                                    coffersApi.date,
+                                  DateFormat('yyyy/MM/dd').format(DateTime.now()),
                                     style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 14,
                                         fontFamily: 'Cairo'),
                                   ),
                                   Text(
-                                    coffersApi.time,
+                                    DateFormat('h:mm').format(DateTime.now()),
                                     style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 14,
@@ -175,7 +174,7 @@ class MainScreen extends StatelessWidget {
                                 labelStyle: TextStyle(
                                   color: Colors.white,
                                   letterSpacing: 2.0,
-                                  fontSize: 13,
+                                  fontSize: 14,
                                   fontFamily: 'Cairo',
                                 ),
                                 alignLabelWithHint: true,
@@ -265,7 +264,7 @@ class MainScreen extends StatelessWidget {
                                 labelStyle: TextStyle(
                                   color: Colors.white,
                                   letterSpacing: 2.0,
-                                  fontSize: 13,
+                                  fontSize: 14,
                                 ),
                                 alignLabelWithHint: true,
                                 disabledBorder: OutlineInputBorder(
@@ -329,7 +328,7 @@ class MainScreen extends StatelessWidget {
                                 labelStyle: TextStyle(
                                   color: Colors.white,
                                   letterSpacing: 2.0,
-                                  fontSize: 13,
+                                  fontSize: 14,
                                 ),
                                 alignLabelWithHint: true,
                                 disabledBorder: OutlineInputBorder(

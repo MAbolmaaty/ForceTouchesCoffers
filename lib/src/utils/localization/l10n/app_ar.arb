@@ -1,7 +1,7 @@
 {
   "@@locale": "ar",
 
-  "login": "الرئيسية",
+  "login": "تسجيل الدخول",
   "@login": {
     "description": ""
   },

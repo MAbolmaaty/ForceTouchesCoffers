@@ -10,8 +10,8 @@ import 'package:provider/provider.dart';
 
 class LoginScreen extends StatelessWidget {
   static Route<dynamic> route() => MaterialPageRoute(
-    builder: (context) => LoginScreen(),
-  );
+        builder: (context) => LoginScreen(),
+      );
 
   final formKey = GlobalKey<FormState>();
   final sKey = GlobalKey<ScaffoldState>();
@@ -32,7 +32,7 @@ class LoginScreen extends StatelessWidget {
             (BuildContext context, BoxConstraints viewPortConstraints) {
           return SingleChildScrollView(
             child: GestureDetector(
-              onTap: (){
+              onTap: () {
                 //// Hide keyboard
                 FocusScope.of(context).unfocus();
               },
@@ -49,7 +49,11 @@ class LoginScreen extends StatelessWidget {
                             margin: EdgeInsets.symmetric(
                                 horizontal: 16.0, vertical: 16.0),
                             child: Align(
-                              alignment: Alignment.centerLeft,
+                              alignment:
+                                  AppLocalizations.of(context).localeName ==
+                                          'ar'
+                                      ? Alignment.centerRight
+                                      : Alignment.centerLeft,
                               child: Text(
                                 AppLocalizations.of(context).login,
                                 style: AppTheme.heading,
@@ -75,8 +79,8 @@ class LoginScreen extends StatelessWidget {
                         ),
                         ///////////////////////////////// Identifier
                         Container(
-                          margin:
-                              EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                          margin: EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 16),
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(25.0)),
                           child: TextFormField(
@@ -88,12 +92,12 @@ class LoginScreen extends StatelessWidget {
                             onSaved: (value) => identifier = value,
                             decoration: InputDecoration(
                                 contentPadding: EdgeInsets.only(
-                                    top: 16, bottom: 16, left: 16, right: 16),
-                                labelText:
-                                    AppLocalizations.of(context).emailOrUsername,
+                                    top: 8.0, bottom: 8.0, left: 8.0, right: 8.0),
+                                labelText: AppLocalizations.of(context)
+                                    .emailOrUsername,
                                 labelStyle: TextStyle(
                                   color: const Color(0xFF999898),
-                                  fontSize: 14,
+                                  fontSize: 12,
                                   fontFamily: 'Cairo',
                                 ),
                                 alignLabelWithHint: true,
@@ -115,8 +119,8 @@ class LoginScreen extends StatelessWidget {
                         ),
                         ///////////////////////////// Password
                         Container(
-                            margin:
-                                EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                            margin: EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 4),
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(25.0)),
                             child: Consumer<AuthenticationApi>(
@@ -132,18 +136,22 @@ class LoginScreen extends StatelessWidget {
                                         PasswordVisibility.PasswordHidden,
                                 decoration: InputDecoration(
                                     contentPadding: EdgeInsets.only(
-                                        top: 16, bottom: 16, left: 16, right: 16),
+                                        top: 8.0,
+                                        bottom: 8.0,
+                                        left: 8.0,
+                                        right: 8.0),
                                     labelText:
                                         AppLocalizations.of(context).password,
                                     labelStyle: TextStyle(
                                       color: const Color(0xFF999898),
-                                      fontSize: 14,
+                                      fontSize: 12,
                                       fontFamily: 'Cairo',
                                     ),
                                     suffixIcon: GestureDetector(
                                       child: Icon(
                                         authenticationApi.passwordVisibility ==
-                                                PasswordVisibility.PasswordHidden
+                                                PasswordVisibility
+                                                    .PasswordHidden
                                             ? Icons.visibility_off
                                             : Icons.visibility,
                                         color: const Color(0xffE3E3E6),
@@ -156,15 +164,18 @@ class LoginScreen extends StatelessWidget {
                                     ),
                                     alignLabelWithHint: true,
                                     border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(25.0),
+                                        borderRadius:
+                                            BorderRadius.circular(25.0),
                                         borderSide: BorderSide(
                                             color: const Color(0xffE3E3E6))),
                                     enabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(25.0),
+                                        borderRadius:
+                                            BorderRadius.circular(25.0),
                                         borderSide: BorderSide(
                                             color: const Color(0xffE3E3E6))),
                                     focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(25.0),
+                                        borderRadius:
+                                            BorderRadius.circular(25.0),
                                         borderSide: BorderSide(
                                             color: const Color(0xffE3E3E6))),
                                     isDense: true),
@@ -216,16 +227,20 @@ class LoginScreen extends StatelessWidget {
                                             AuthenticationResponseModel
                                                 authenticationResponseModel =
                                                 result['data'];
-                                            UserPreferences().saveUser(authenticationResponseModel).then((value) {
+                                            UserPreferences()
+                                                .saveUser(
+                                                    authenticationResponseModel)
+                                                .then((value) {
                                               if (value) {
                                                 Navigator.of(context)
                                                     .pushAndRemoveUntil(
-                                                    MainScreen.route(),
+                                                        MainScreen.route(),
                                                         (route) => false);
                                               }
                                             });
-                                          } else{
-                                            sKey.currentState.showSnackBar(SnackBar(
+                                          } else {
+                                            sKey.currentState
+                                                .showSnackBar(SnackBar(
                                               content: Text(
                                                 AppLocalizations.of(context)
                                                     .authenticationFailed,
@@ -238,7 +253,8 @@ class LoginScreen extends StatelessWidget {
                                   },
                                   color: AppTheme.kPrimaryColor,
                                   shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(16.0)),
+                                      borderRadius:
+                                          BorderRadius.circular(16.0)),
                                   child: authenticationApi.loggedInStatus ==
                                           Status.LoggingIn
                                       ? _loading()

@@ -13,7 +13,7 @@ class CoffersResponseModel {
   String createdAt;
   String updatedAt;
   int iV;
-  int id;
+  var id;
 
   CoffersResponseModel(
       {this.sId,

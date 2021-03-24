@@ -13,7 +13,7 @@ class AppTheme {
   //
   static final TextStyle heading = TextStyle(
     color: Colors.black,
-    fontSize: 24,
+    fontSize: 16,
     fontWeight: FontWeight.w600,
     letterSpacing: 0.5,
     fontFamily: 'Cairo',
