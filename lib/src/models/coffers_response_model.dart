@@ -1,7 +1,6 @@
 class CoffersResponseModel {
   String sId;
   String treasury;
-  String treasuryTotal;
   String salaries;
   String salariesMonth;
   String bills;
@@ -18,7 +17,6 @@ class CoffersResponseModel {
   CoffersResponseModel(
       {this.sId,
         this.treasury,
-        this.treasuryTotal,
         this.salaries,
         this.salariesMonth,
         this.bills,
@@ -35,7 +33,6 @@ class CoffersResponseModel {
   CoffersResponseModel.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
     treasury = json['treasury'];
-    treasuryTotal = json['treasury_total'];
     salaries = json['salaries'];
     salariesMonth = json['salaries_month'];
     bills = json['bills'];
@@ -54,7 +51,6 @@ class CoffersResponseModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['_id'] = this.sId;
     data['treasury'] = this.treasury;
-    data['treasury_total'] = this.treasuryTotal;
     data['salaries'] = this.salaries;
     data['salaries_month'] = this.salariesMonth;
     data['bills'] = this.bills;

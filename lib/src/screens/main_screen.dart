@@ -21,8 +21,48 @@ class MainScreen extends StatelessWidget {
     return UserPreferences()
         .getUser()
         .then((authenticationResponseModel) async {
-      await coffersApi.fetchData(authenticationResponseModel.jwt);
+      await coffersApi
+          .fetchData(authenticationResponseModel.jwt);
     });
+  }
+
+  bool isNegativeAmount(String amount) {
+    return amount.contains(RegExp("- ?[0-9]|[0-9] ?-"));
+  }
+
+  String checkAmount(String amount) {
+    amount = amount.replaceAll(" ", "");
+    RegExp regExp = RegExp("[.|,]?\\d+[.|,]?");
+    var splits = regExp.allMatches(amount).toList();
+    String wholeNumber = "";
+    for (var split in splits) {
+      wholeNumber += split.group(0).toString();
+    }
+    if (parseAmount(wholeNumber) == null) wholeNumber = "...";
+
+    return wholeNumber;
+  }
+
+  double parseAmount(String amount) {
+    amount = amount.replaceAll(" ", "");
+    RegExp regExp = RegExp("[.]?\\d+[.]?");
+    bool isNegative = isNegativeAmount(amount);
+    var splits = regExp.allMatches(amount).toList();
+    String wholeNumber = "";
+    for (var split in splits) {
+      wholeNumber += split.group(0).toString();
+    }
+    double doubleAmount;
+    try {
+      doubleAmount = double.parse(wholeNumber);
+    } on Exception catch (e) {
+      print(wholeNumber);
+      print(e.toString());
+    }
+    if (isNegative) {
+      doubleAmount = doubleAmount * -1;
+    }
+    return doubleAmount;
   }
 
   @override
@@ -49,6 +89,15 @@ class MainScreen extends StatelessWidget {
                         Navigator.of(context).pushAndRemoveUntil(
                             LoginScreen.route(), (route) => false));
                   }
+                  String treasuryTotal = "";
+                  if(coffersApi.coffersLoading == CoffersLoading.Succeed){
+                    double doubleTreasuryTotal;
+                    doubleTreasuryTotal = parseAmount(coffersApi.coffersResponseModel.ibrahimTreasury) +
+                        parseAmount(coffersApi.coffersResponseModel.abdelazizTreasury) +
+                        parseAmount(coffersApi.coffersResponseModel.bahaaTreasury) +
+                        parseAmount(coffersApi.coffersResponseModel.abdelrahmanTreasury);
+                    treasuryTotal = doubleTreasuryTotal.toString();
+                  }
                   return Column(
                     children: <Widget>[
                       SizedBox(
@@ -71,7 +120,8 @@ class MainScreen extends StatelessWidget {
                                         fontFamily: 'Cairo'),
                                   ),
                                   Text(
-                                  DateFormat('yyyy/MM/dd').format(DateTime.now()),
+                                    DateFormat('yyyy/MM/dd')
+                                        .format(DateTime.now()),
                                     style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 14,
@@ -178,16 +228,73 @@ class MainScreen extends StatelessWidget {
                             Align(
                               alignment: Alignment.center,
                               child: Container(
-                                child: Text(
-                                  coffersApi.coffersLoading ==
-                                          CoffersLoading.Succeed
-                                      ? coffersApi.coffersResponseModel.salaries
-                                      : '...',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                      fontFamily: 'Cairo'),
-                                ),
+                                child: coffersApi.coffersLoading ==
+                                        CoffersLoading.Succeed
+                                    ? Wrap(
+                                        crossAxisAlignment:
+                                            WrapCrossAlignment.center,
+                                        children: [
+                                          Localizations.override(
+                                            context: context,
+                                            locale: const Locale('en'),
+                                            child: Builder(builder:
+                                                (BuildContext context) {
+                                              return Text(
+                                                checkAmount(coffersApi
+                                                    .coffersResponseModel
+                                                    .salaries),
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 16,
+                                                    fontFamily: 'Cairo'),
+                                              );
+                                            }),
+                                          ),
+                                          SizedBox(
+                                            width: 4.0,
+                                          ),
+                                          Visibility(
+                                            visible: (parseAmount(coffersApi
+                                                        .coffersResponseModel
+                                                        .salaries) !=
+                                                    null) ==
+                                                (parseAmount(coffersApi
+                                                        .coffersResponseModel
+                                                        .salaries) !=
+                                                    0.0),
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                  color: isNegativeAmount(
+                                                          coffersApi
+                                                              .coffersResponseModel
+                                                              .salaries)
+                                                      ? const Color(0xffC70F0F)
+                                                      : const Color(0xff0FC73A),
+                                                  shape: BoxShape.circle),
+                                              child: isNegativeAmount(coffersApi
+                                                      .coffersResponseModel
+                                                      .salaries)
+                                                  ? Icon(
+                                                      Icons.remove,
+                                                      color: Colors.white,
+                                                      size: 14.0,
+                                                    )
+                                                  : Icon(
+                                                      Icons.add,
+                                                      color: Colors.white,
+                                                      size: 14.0,
+                                                    ),
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                    : Text(
+                                        '...',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 16,
+                                            fontFamily: 'Cairo'),
+                                      ),
                               ),
                             ),
                             Align(
@@ -267,14 +374,73 @@ class MainScreen extends StatelessWidget {
                             Align(
                               alignment: Alignment.center,
                               child: Container(
-                                child: Text(
-                                  coffersApi.coffersLoading ==
-                                          CoffersLoading.Succeed
-                                      ? coffersApi.coffersResponseModel.bills
-                                      : '...',
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 16),
-                                ),
+                                child: coffersApi.coffersLoading ==
+                                        CoffersLoading.Succeed
+                                    ? Wrap(
+                                        crossAxisAlignment:
+                                            WrapCrossAlignment.center,
+                                        children: [
+                                          Localizations.override(
+                                            context: context,
+                                            locale: const Locale('en'),
+                                            child: Builder(builder:
+                                                (BuildContext context) {
+                                              return Text(
+                                                checkAmount(coffersApi
+                                                    .coffersResponseModel
+                                                    .bills),
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 16,
+                                                    fontFamily: 'Cairo'),
+                                              );
+                                            }),
+                                          ),
+                                          SizedBox(
+                                            width: 4.0,
+                                          ),
+                                          Visibility(
+                                            visible: (parseAmount(coffersApi
+                                                .coffersResponseModel
+                                                .bills) !=
+                                                null) ==
+                                                (parseAmount(coffersApi
+                                                    .coffersResponseModel
+                                                    .bills) !=
+                                                    0.0),
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                  color: isNegativeAmount(
+                                                          coffersApi
+                                                              .coffersResponseModel
+                                                              .bills)
+                                                      ? const Color(0xffC70F0F)
+                                                      : const Color(0xff0FC73A),
+                                                  shape: BoxShape.circle),
+                                              child: isNegativeAmount(coffersApi
+                                                      .coffersResponseModel
+                                                      .bills)
+                                                  ? Icon(
+                                                      Icons.remove,
+                                                      color: Colors.white,
+                                                      size: 14.0,
+                                                    )
+                                                  : Icon(
+                                                      Icons.add,
+                                                      color: Colors.white,
+                                                      size: 14.0,
+                                                    ),
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                    : Text(
+                                        '...',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 16,
+                                            fontFamily: 'Cairo'),
+                                      ),
                               ),
                             ),
                             Align(
@@ -331,14 +497,73 @@ class MainScreen extends StatelessWidget {
                             Align(
                               alignment: Alignment.center,
                               child: Container(
-                                child: Text(
-                                  coffersApi.coffersLoading ==
-                                          CoffersLoading.Succeed
-                                      ? coffersApi.coffersResponseModel.treasury
-                                      : '...',
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 16),
-                                ),
+                                child: coffersApi.coffersLoading ==
+                                        CoffersLoading.Succeed
+                                    ? Wrap(
+                                        crossAxisAlignment:
+                                            WrapCrossAlignment.center,
+                                        children: [
+                                          Localizations.override(
+                                            context: context,
+                                            locale: const Locale('en'),
+                                            child: Builder(builder:
+                                                (BuildContext context) {
+                                              return Text(
+                                                checkAmount(coffersApi
+                                                    .coffersResponseModel
+                                                    .treasury),
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 16,
+                                                    fontFamily: 'Cairo'),
+                                              );
+                                            }),
+                                          ),
+                                          SizedBox(
+                                            width: 4.0,
+                                          ),
+                                          Visibility(
+                                            visible: (parseAmount(coffersApi
+                                                .coffersResponseModel
+                                                .treasury) !=
+                                                null) ==
+                                                (parseAmount(coffersApi
+                                                    .coffersResponseModel
+                                                    .treasury) !=
+                                                    0.0),
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                  color: isNegativeAmount(
+                                                          coffersApi
+                                                              .coffersResponseModel
+                                                              .treasury)
+                                                      ? const Color(0xffC70F0F)
+                                                      : const Color(0xff0FC73A),
+                                                  shape: BoxShape.circle),
+                                              child: isNegativeAmount(coffersApi
+                                                      .coffersResponseModel
+                                                      .treasury)
+                                                  ? Icon(
+                                                      Icons.remove,
+                                                      color: Colors.white,
+                                                      size: 14.0,
+                                                    )
+                                                  : Icon(
+                                                      Icons.add,
+                                                      color: Colors.white,
+                                                      size: 14.0,
+                                                    ),
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                    : Text(
+                                        '...',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 16,
+                                            fontFamily: 'Cairo'),
+                                      ),
                               ),
                             ),
                             Align(
@@ -420,15 +645,76 @@ class MainScreen extends StatelessWidget {
                                 Align(
                                   alignment: Alignment.center,
                                   child: Container(
-                                    child: Text(
-                                      coffersApi.coffersLoading ==
-                                              CoffersLoading.Succeed
-                                          ? coffersApi.coffersResponseModel
-                                              .ibrahimTreasury
-                                          : '...',
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 16),
-                                    ),
+                                    child: coffersApi.coffersLoading ==
+                                            CoffersLoading.Succeed
+                                        ? Wrap(
+                                            crossAxisAlignment:
+                                                WrapCrossAlignment.center,
+                                            children: [
+                                              Localizations.override(
+                                                context: context,
+                                                locale: const Locale('en'),
+                                                child: Builder(builder:
+                                                    (BuildContext context) {
+                                                  return Text(
+                                                    checkAmount(coffersApi
+                                                        .coffersResponseModel
+                                                        .ibrahimTreasury),
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 16,
+                                                        fontFamily: 'Cairo'),
+                                                  );
+                                                }),
+                                              ),
+                                              SizedBox(
+                                                width: 4.0,
+                                              ),
+                                              Visibility(
+                                                visible: (parseAmount(coffersApi
+                                                    .coffersResponseModel
+                                                    .ibrahimTreasury) !=
+                                                    null) ==
+                                                    (parseAmount(coffersApi
+                                                        .coffersResponseModel
+                                                        .ibrahimTreasury) !=
+                                                        0.0),
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                      color: isNegativeAmount(
+                                                              coffersApi
+                                                                  .coffersResponseModel
+                                                                  .ibrahimTreasury)
+                                                          ? const Color(
+                                                              0xffC70F0F)
+                                                          : const Color(
+                                                              0xff0FC73A),
+                                                      shape: BoxShape.circle),
+                                                  child: isNegativeAmount(
+                                                          coffersApi
+                                                              .coffersResponseModel
+                                                              .ibrahimTreasury)
+                                                      ? Icon(
+                                                          Icons.remove,
+                                                          color: Colors.white,
+                                                          size: 14.0,
+                                                        )
+                                                      : Icon(
+                                                          Icons.add,
+                                                          color: Colors.white,
+                                                          size: 14.0,
+                                                        ),
+                                                ),
+                                              ),
+                                            ],
+                                          )
+                                        : Text(
+                                            '...',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 16,
+                                                fontFamily: 'Cairo'),
+                                          ),
                                   ),
                                 ),
                                 Align(
@@ -492,15 +778,75 @@ class MainScreen extends StatelessWidget {
                                 Align(
                                   alignment: Alignment.center,
                                   child: Container(
-                                    child: Text(
-                                      coffersApi.coffersLoading ==
-                                              CoffersLoading.Succeed
-                                          ? coffersApi.coffersResponseModel
-                                              .abdelazizTreasury
-                                          : '...',
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 16),
-                                    ),
+                                    child: coffersApi.coffersLoading ==
+                                            CoffersLoading.Succeed
+                                        ? Wrap(
+                                            crossAxisAlignment:
+                                                WrapCrossAlignment.center,
+                                            children: [
+                                              Localizations.override(
+                                                context: context,
+                                                locale: const Locale('en'),
+                                                child: Builder(builder:
+                                                    (BuildContext context) {
+                                                  return Text(
+                                                    checkAmount(coffersApi
+                                                        .coffersResponseModel
+                                                        .abdelazizTreasury),
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 16,
+                                                        fontFamily: 'Cairo'),
+                                                  );
+                                                }),
+                                              ),
+                                              SizedBox(
+                                                width: 4.0,
+                                              ),
+                                              Visibility(
+                                                visible: (parseAmount(coffersApi
+                                                    .coffersResponseModel
+                                                    .abdelazizTreasury) !=
+                                                    null) ==
+                                                    (parseAmount(coffersApi
+                                                        .coffersResponseModel
+                                                        .abdelazizTreasury) !=
+                                                        0.0),
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                      color: isNegativeAmount(coffersApi
+                                                              .coffersResponseModel
+                                                              .abdelazizTreasury)
+                                                          ? const Color(
+                                                              0xffC70F0F)
+                                                          : const Color(
+                                                              0xff0FC73A),
+                                                      shape: BoxShape.circle),
+                                                  child: isNegativeAmount(
+                                                          coffersApi
+                                                              .coffersResponseModel
+                                                              .abdelazizTreasury)
+                                                      ? Icon(
+                                                          Icons.remove,
+                                                          color: Colors.white,
+                                                          size: 14.0,
+                                                        )
+                                                      : Icon(
+                                                          Icons.add,
+                                                          color: Colors.white,
+                                                          size: 14.0,
+                                                        ),
+                                                ),
+                                              ),
+                                            ],
+                                          )
+                                        : Text(
+                                            '...',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 16,
+                                                fontFamily: 'Cairo'),
+                                          ),
                                   ),
                                 ),
                                 Align(
@@ -569,15 +915,76 @@ class MainScreen extends StatelessWidget {
                                 Align(
                                   alignment: Alignment.center,
                                   child: Container(
-                                    child: Text(
-                                      coffersApi.coffersLoading ==
-                                              CoffersLoading.Succeed
-                                          ? coffersApi.coffersResponseModel
-                                              .bahaaTreasury
-                                          : '...',
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 16),
-                                    ),
+                                    child: coffersApi.coffersLoading ==
+                                            CoffersLoading.Succeed
+                                        ? Wrap(
+                                            crossAxisAlignment:
+                                                WrapCrossAlignment.center,
+                                            children: [
+                                              Localizations.override(
+                                                context: context,
+                                                locale: const Locale('en'),
+                                                child: Builder(builder:
+                                                    (BuildContext context) {
+                                                  return Text(
+                                                    checkAmount(coffersApi
+                                                        .coffersResponseModel
+                                                        .bahaaTreasury),
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 16,
+                                                        fontFamily: 'Cairo'),
+                                                  );
+                                                }),
+                                              ),
+                                              SizedBox(
+                                                width: 4.0,
+                                              ),
+                                              Visibility(
+                                                visible: (parseAmount(coffersApi
+                                                    .coffersResponseModel
+                                                    .bahaaTreasury) !=
+                                                    null) ==
+                                                    (parseAmount(coffersApi
+                                                        .coffersResponseModel
+                                                        .bahaaTreasury) !=
+                                                        0.0),
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                      color: isNegativeAmount(
+                                                              coffersApi
+                                                                  .coffersResponseModel
+                                                                  .bahaaTreasury)
+                                                          ? const Color(
+                                                              0xffC70F0F)
+                                                          : const Color(
+                                                              0xff0FC73A),
+                                                      shape: BoxShape.circle),
+                                                  child: isNegativeAmount(
+                                                          coffersApi
+                                                              .coffersResponseModel
+                                                              .bahaaTreasury)
+                                                      ? Icon(
+                                                          Icons.remove,
+                                                          color: Colors.white,
+                                                          size: 14.0,
+                                                        )
+                                                      : Icon(
+                                                          Icons.add,
+                                                          color: Colors.white,
+                                                          size: 14.0,
+                                                        ),
+                                                ),
+                                              ),
+                                            ],
+                                          )
+                                        : Text(
+                                            '...',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 16,
+                                                fontFamily: 'Cairo'),
+                                          ),
                                   ),
                                 ),
                                 Align(
@@ -641,15 +1048,74 @@ class MainScreen extends StatelessWidget {
                                 Align(
                                   alignment: Alignment.center,
                                   child: Container(
-                                    child: Text(
-                                      coffersApi.coffersLoading ==
-                                              CoffersLoading.Succeed
-                                          ? coffersApi.coffersResponseModel
-                                              .abdelrahmanTreasury
-                                          : '...',
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 16),
-                                    ),
+                                    child: coffersApi.coffersLoading ==
+                                            CoffersLoading.Succeed
+                                        ? Wrap(
+                                            crossAxisAlignment:
+                                                WrapCrossAlignment.center,
+                                            children: [
+                                              Localizations.override(
+                                                context: context,
+                                                locale: const Locale('en'),
+                                                child: Builder(builder:
+                                                    (BuildContext context) {
+                                                  return Text(
+                                                    checkAmount(coffersApi
+                                                        .coffersResponseModel
+                                                        .abdelrahmanTreasury),
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 16,
+                                                        fontFamily: 'Cairo'),
+                                                  );
+                                                }),
+                                              ),
+                                              SizedBox(
+                                                width: 4.0,
+                                              ),
+                                              Visibility(
+                                                visible: (parseAmount(coffersApi
+                                                    .coffersResponseModel
+                                                    .abdelrahmanTreasury) !=
+                                                    null) ==
+                                                    (parseAmount(coffersApi
+                                                        .coffersResponseModel
+                                                        .abdelrahmanTreasury) !=
+                                                        0.0),
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                      color: isNegativeAmount(coffersApi
+                                                              .coffersResponseModel
+                                                              .abdelrahmanTreasury)
+                                                          ? const Color(
+                                                              0xffC70F0F)
+                                                          : const Color(
+                                                              0xff0FC73A),
+                                                      shape: BoxShape.circle),
+                                                  child: isNegativeAmount(coffersApi
+                                                          .coffersResponseModel
+                                                          .abdelrahmanTreasury)
+                                                      ? Icon(
+                                                          Icons.remove,
+                                                          color: Colors.white,
+                                                          size: 14.0,
+                                                        )
+                                                      : Icon(
+                                                          Icons.add,
+                                                          color: Colors.white,
+                                                          size: 14.0,
+                                                        ),
+                                                ),
+                                              ),
+                                            ],
+                                          )
+                                        : Text(
+                                            '...',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 16,
+                                                fontFamily: 'Cairo'),
+                                          ),
                                   ),
                                 ),
                                 Align(
@@ -680,6 +1146,7 @@ class MainScreen extends StatelessWidget {
                       SizedBox(
                         height: 16.0,
                       ),
+                      //////////////////////////// Treasury Total
                       Container(
                         margin: EdgeInsets.symmetric(horizontal: 16.0),
                         child: Row(
@@ -694,19 +1161,64 @@ class MainScreen extends StatelessWidget {
                                     color: Colors.white),
                               ),
                             ),
-                            Text(
-                              coffersApi.coffersLoading ==
-                                      CoffersLoading.Succeed
-                                  ? coffersApi
-                                      .coffersResponseModel.treasuryTotal
-                                  : '...',
-                              style: TextStyle(
-                                  fontFamily: 'Cairo',
-                                  fontSize: 14,
-                                  color: Colors.white),
-                            ),
+                            coffersApi.coffersLoading == CoffersLoading.Succeed
+                                ? Wrap(
+                                    crossAxisAlignment:
+                                        WrapCrossAlignment.center,
+                                    children: [
+                                      Localizations.override(
+                                        context: context,
+                                        locale: const Locale('en'),
+                                        child: Builder(
+                                            builder: (BuildContext context) {
+                                          return Text(
+                                            checkAmount(treasuryTotal),
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 16,
+                                                fontFamily: 'Cairo'),
+                                          );
+                                        }),
+                                      ),
+                                      SizedBox(
+                                        width: 4.0,
+                                      ),
+                                      Visibility(
+                                        visible: (parseAmount(treasuryTotal) !=
+                                            null) ==
+                                            (parseAmount(treasuryTotal) !=
+                                                0.0),
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              color:
+                                                  isNegativeAmount(treasuryTotal)
+                                                      ? const Color(0xffC70F0F)
+                                                      : const Color(0xff0FC73A),
+                                              shape: BoxShape.circle),
+                                          child: isNegativeAmount(treasuryTotal)
+                                              ? Icon(
+                                                  Icons.remove,
+                                                  color: Colors.white,
+                                                  size: 14.0,
+                                                )
+                                              : Icon(
+                                                  Icons.add,
+                                                  color: Colors.white,
+                                                  size: 14.0,
+                                                ),
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                : Text(
+                                    '...',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontFamily: 'Cairo'),
+                                  ),
                             SizedBox(
-                              width: 8.0,
+                              width: 16.0,
                             ),
                             Text(
                               AppLocalizations.of(context).saudiCurrency,

@@ -14,6 +14,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
+      locale: Locale('ar'),
       theme: ThemeData(
           primarySwatch: Colors.blue,
           accentColor: AppTheme.kPrimaryColor,
