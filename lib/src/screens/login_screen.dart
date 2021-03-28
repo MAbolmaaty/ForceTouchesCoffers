@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:force_touches_financial/app_theme.dart';
 import 'package:force_touches_financial/src/models/authentication_response_model.dart';
@@ -25,8 +26,9 @@ class LoginScreen extends StatelessWidget {
       child: Scaffold(
         key: sKey,
         appBar: AppBar(
-          toolbarHeight: 0,
-          backgroundColor: AppTheme.kPrimaryColor,
+          backgroundColor: Colors.white,
+          toolbarHeight: 0.0,
+          elevation: 0.0,
         ),
         body: LayoutBuilder(builder:
             (BuildContext context, BoxConstraints viewPortConstraints) {
@@ -92,7 +94,10 @@ class LoginScreen extends StatelessWidget {
                             onSaved: (value) => identifier = value,
                             decoration: InputDecoration(
                                 contentPadding: EdgeInsets.only(
-                                    top: 8.0, bottom: 8.0, left: 8.0, right: 8.0),
+                                    top: 8.0,
+                                    bottom: 8.0,
+                                    left: 8.0,
+                                    right: 8.0),
                                 labelText: AppLocalizations.of(context)
                                     .emailOrUsername,
                                 labelStyle: TextStyle(

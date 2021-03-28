@@ -73,8 +73,9 @@ class MainScreen extends StatelessWidget {
         create: (context) => coffersApi,
         child: Scaffold(
             appBar: AppBar(
-              toolbarHeight: 0,
-              backgroundColor: AppTheme.kPrimaryColor,
+              backgroundColor: Colors.white,
+              toolbarHeight: 0.0,
+              elevation: 0.0,
             ),
             backgroundColor: AppTheme.kPrimaryColor,
             body: RefreshIndicator(
