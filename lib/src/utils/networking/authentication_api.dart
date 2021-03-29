@@ -1,10 +1,9 @@
 import 'dart:convert';
-import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:force_touches_financial/src/models/authentication_response_model.dart';
 import 'package:force_touches_financial/src/utils/networking/app_url.dart';
 import 'package:http/http.dart';
-import 'package:http_parser/http_parser.dart';
 
 enum Status {
   NotLoggedIn,
@@ -18,13 +17,12 @@ enum PasswordVisibility {
 }
 
 class AuthenticationApi with ChangeNotifier {
-
   Status _loggedInStatus = Status.NotLoggedIn;
   PasswordVisibility _passwordVisibility = PasswordVisibility.PasswordHidden;
 
   Status get loggedInStatus => _loggedInStatus;
-  PasswordVisibility get passwordVisibility => _passwordVisibility;
 
+  PasswordVisibility get passwordVisibility => _passwordVisibility;
 
   Future<Map<String, dynamic>> login(String identifier, String password) async {
     var result;
@@ -52,7 +50,7 @@ class AuthenticationApi with ChangeNotifier {
     if (response.statusCode == 200) {
       final Map<String, dynamic> responseData = json.decode(response.body);
       AuthenticationResponseModel authenticationResponseModel =
-          AuthenticationResponseModel.fromJson(responseData);
+      AuthenticationResponseModel.fromJson(responseData);
 
       _loggedInStatus = Status.LoggedIn;
       notifyListeners();
@@ -64,10 +62,7 @@ class AuthenticationApi with ChangeNotifier {
     } else {
       _loggedInStatus = Status.NotLoggedIn;
       notifyListeners();
-      result = {
-        'status': false,
-        'data': json.decode(response.body)
-      };
+      result = {'status': false, 'data': json.decode(response.body)};
     }
     return result;
   }
@@ -82,3 +77,6 @@ class AuthenticationApi with ChangeNotifier {
     }
   }
 }
+
+
+

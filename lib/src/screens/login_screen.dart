@@ -11,8 +11,8 @@ import 'package:provider/provider.dart';
 
 class LoginScreen extends StatelessWidget {
   static Route<dynamic> route() => MaterialPageRoute(
-        builder: (context) => LoginScreen(),
-      );
+    builder: (context) => LoginScreen(),
+  );
 
   final formKey = GlobalKey<FormState>();
   final sKey = GlobalKey<ScaffoldState>();
@@ -42,7 +42,7 @@ class LoginScreen extends StatelessWidget {
                 key: formKey,
                 child: ConstrainedBox(
                   constraints:
-                      BoxConstraints(minHeight: viewPortConstraints.maxHeight),
+                  BoxConstraints(minHeight: viewPortConstraints.maxHeight),
                   child: IntrinsicHeight(
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
@@ -52,10 +52,10 @@ class LoginScreen extends StatelessWidget {
                                 horizontal: 16.0, vertical: 16.0),
                             child: Align(
                               alignment:
-                                  AppLocalizations.of(context).localeName ==
-                                          'ar'
-                                      ? Alignment.centerRight
-                                      : Alignment.centerLeft,
+                              AppLocalizations.of(context).localeName ==
+                                  'ar'
+                                  ? Alignment.centerRight
+                                  : Alignment.centerLeft,
                               child: Text(
                                 AppLocalizations.of(context).login,
                                 style: AppTheme.heading,
@@ -89,7 +89,7 @@ class LoginScreen extends StatelessWidget {
                             maxLines: 1,
                             validator: (value) => value.isEmpty
                                 ? AppLocalizations.of(context)
-                                    .enterEmailOrUsername
+                                .enterEmailOrUsername
                                 : null,
                             onSaved: (value) => identifier = value,
                             decoration: InputDecoration(
@@ -130,62 +130,62 @@ class LoginScreen extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(25.0)),
                             child: Consumer<AuthenticationApi>(
                                 builder: (context, authenticationApi, child) {
-                              return TextFormField(
-                                maxLines: 1,
-                                validator: (value) => value.isEmpty
-                                    ? AppLocalizations.of(context).enterPassword
-                                    : null,
-                                onSaved: (value) => password = value,
-                                obscureText:
+                                  return TextFormField(
+                                    maxLines: 1,
+                                    validator: (value) => value.isEmpty
+                                        ? AppLocalizations.of(context).enterPassword
+                                        : null,
+                                    onSaved: (value) => password = value,
+                                    obscureText:
                                     authenticationApi.passwordVisibility ==
                                         PasswordVisibility.PasswordHidden,
-                                decoration: InputDecoration(
-                                    contentPadding: EdgeInsets.only(
-                                        top: 8.0,
-                                        bottom: 8.0,
-                                        left: 8.0,
-                                        right: 8.0),
-                                    labelText:
+                                    decoration: InputDecoration(
+                                        contentPadding: EdgeInsets.only(
+                                            top: 8.0,
+                                            bottom: 8.0,
+                                            left: 8.0,
+                                            right: 8.0),
+                                        labelText:
                                         AppLocalizations.of(context).password,
-                                    labelStyle: TextStyle(
-                                      color: const Color(0xFF999898),
-                                      fontSize: 12,
-                                      fontFamily: 'Cairo',
-                                    ),
-                                    suffixIcon: GestureDetector(
-                                      child: Icon(
-                                        authenticationApi.passwordVisibility ==
+                                        labelStyle: TextStyle(
+                                          color: const Color(0xFF999898),
+                                          fontSize: 12,
+                                          fontFamily: 'Cairo',
+                                        ),
+                                        suffixIcon: GestureDetector(
+                                          child: Icon(
+                                            authenticationApi.passwordVisibility ==
                                                 PasswordVisibility
                                                     .PasswordHidden
-                                            ? Icons.visibility_off
-                                            : Icons.visibility,
-                                        color: const Color(0xffE3E3E6),
-                                        size: 25,
-                                      ),
-                                      onTap: () {
-                                        authenticationApi
-                                            .changePasswordVisibility();
-                                      },
-                                    ),
-                                    alignLabelWithHint: true,
-                                    border: OutlineInputBorder(
-                                        borderRadius:
+                                                ? Icons.visibility_off
+                                                : Icons.visibility,
+                                            color: const Color(0xffE3E3E6),
+                                            size: 25,
+                                          ),
+                                          onTap: () {
+                                            authenticationApi
+                                                .changePasswordVisibility();
+                                          },
+                                        ),
+                                        alignLabelWithHint: true,
+                                        border: OutlineInputBorder(
+                                            borderRadius:
                                             BorderRadius.circular(25.0),
-                                        borderSide: BorderSide(
-                                            color: const Color(0xffE3E3E6))),
-                                    enabledBorder: OutlineInputBorder(
-                                        borderRadius:
+                                            borderSide: BorderSide(
+                                                color: const Color(0xffE3E3E6))),
+                                        enabledBorder: OutlineInputBorder(
+                                            borderRadius:
                                             BorderRadius.circular(25.0),
-                                        borderSide: BorderSide(
-                                            color: const Color(0xffE3E3E6))),
-                                    focusedBorder: OutlineInputBorder(
-                                        borderRadius:
+                                            borderSide: BorderSide(
+                                                color: const Color(0xffE3E3E6))),
+                                        focusedBorder: OutlineInputBorder(
+                                            borderRadius:
                                             BorderRadius.circular(25.0),
-                                        borderSide: BorderSide(
-                                            color: const Color(0xffE3E3E6))),
-                                    isDense: true),
-                              );
-                            })),
+                                            borderSide: BorderSide(
+                                                color: const Color(0xffE3E3E6))),
+                                        isDense: true),
+                                  );
+                                })),
                         Container(
                           margin: EdgeInsets.symmetric(horizontal: 16),
                           child: Row(
@@ -216,62 +216,62 @@ class LoginScreen extends StatelessWidget {
                                   vertical: 16.0, horizontal: 48.0),
                               child: Consumer<AuthenticationApi>(
                                   builder: (context, authenticationApi, child) {
-                                return RaisedButton(
-                                  onPressed: () {
-                                    //// Hide keyboard
-                                    FocusScope.of(context).unfocus();
-                                    if (authenticationApi.loggedInStatus !=
-                                        Status.LoggingIn) {
-                                      final form = formKey.currentState;
-                                      if (form.validate()) {
-                                        form.save();
-                                        authenticationApi
-                                            .login(identifier, password)
-                                            .then((result) {
-                                          if (result['status']) {
-                                            AuthenticationResponseModel
+                                    return RaisedButton(
+                                      onPressed: () {
+                                        //// Hide keyboard
+                                        FocusScope.of(context).unfocus();
+                                        if (authenticationApi.loggedInStatus !=
+                                            Status.LoggingIn) {
+                                          final form = formKey.currentState;
+                                          if (form.validate()) {
+                                            form.save();
+                                            authenticationApi
+                                                .login(identifier, password)
+                                                .then((result) {
+                                              if (result['status']) {
+                                                AuthenticationResponseModel
                                                 authenticationResponseModel =
                                                 result['data'];
-                                            UserPreferences()
-                                                .saveUser(
+                                                UserPreferences()
+                                                    .saveUser(
                                                     authenticationResponseModel)
-                                                .then((value) {
-                                              if (value) {
-                                                Navigator.of(context)
-                                                    .pushAndRemoveUntil(
+                                                    .then((value) {
+                                                  if (value) {
+                                                    Navigator.of(context)
+                                                        .pushAndRemoveUntil(
                                                         MainScreen.route(),
-                                                        (route) => false);
+                                                            (route) => false);
+                                                  }
+                                                });
+                                              } else {
+                                                sKey.currentState
+                                                    .showSnackBar(SnackBar(
+                                                  content: Text(
+                                                    AppLocalizations.of(context)
+                                                        .authenticationFailed,
+                                                  ),
+                                                ));
                                               }
                                             });
-                                          } else {
-                                            sKey.currentState
-                                                .showSnackBar(SnackBar(
-                                              content: Text(
-                                                AppLocalizations.of(context)
-                                                    .authenticationFailed,
-                                              ),
-                                            ));
                                           }
-                                        });
-                                      }
-                                    }
-                                  },
-                                  color: AppTheme.kPrimaryColor,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius:
+                                        }
+                                      },
+                                      color: AppTheme.kPrimaryColor,
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
                                           BorderRadius.circular(16.0)),
-                                  child: authenticationApi.loggedInStatus ==
+                                      child: authenticationApi.loggedInStatus ==
                                           Status.LoggingIn
-                                      ? _loading()
-                                      : Text(
-                                          AppLocalizations.of(context).login,
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontFamily: 'Cairo',
-                                              fontSize: 16.0),
-                                        ),
-                                );
-                              }),
+                                          ? _loading()
+                                          : Text(
+                                        AppLocalizations.of(context).login,
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontFamily: 'Cairo',
+                                            fontSize: 16.0),
+                                      ),
+                                    );
+                                  }),
                             ),
                           ),
                         ),
@@ -303,3 +303,4 @@ class LoginScreen extends StatelessWidget {
     );
   }
 }
+

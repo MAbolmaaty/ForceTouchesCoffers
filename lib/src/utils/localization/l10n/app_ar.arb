@@ -76,5 +76,9 @@
   "wrongNumber": "خطأ بالرقم",
   "@wrongNumber": {
     "description": ""
+  },
+  "emptyField": "...",
+  "@emptyField": {
+    "description": ""
   }
 }

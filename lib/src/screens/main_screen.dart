@@ -4,16 +4,17 @@ import 'package:force_touches_financial/app_theme.dart';
 import 'package:force_touches_financial/src/screens/login_screen.dart';
 import 'package:force_touches_financial/src/utils/networking/coffers_api.dart';
 import 'package:force_touches_financial/src/utils/preferences/user_preferences.dart';
+import 'package:force_touches_financial/src/widgets/amount_data_field.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class MainScreen extends StatelessWidget {
   static Route<dynamic> route() => MaterialPageRoute(
-        builder: (context) => MainScreen(),
-      );
+    builder: (context) => MainScreen(),
+  );
 
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-      GlobalKey<RefreshIndicatorState>();
+  GlobalKey<RefreshIndicatorState>();
 
   final CoffersApi coffersApi = CoffersApi();
 
@@ -21,8 +22,7 @@ class MainScreen extends StatelessWidget {
     return UserPreferences()
         .getUser()
         .then((authenticationResponseModel) async {
-      await coffersApi
-          .fetchData(authenticationResponseModel.jwt);
+      await coffersApi.fetchData(authenticationResponseModel.jwt);
     });
   }
 
@@ -55,10 +55,7 @@ class MainScreen extends StatelessWidget {
     double doubleAmount;
     try {
       doubleAmount = double.parse(wholeNumber);
-    } on Exception catch (e) {
-      print(wholeNumber);
-      print(e.toString());
-    }
+    } on Exception catch (e) {}
     if (isNegative) {
       doubleAmount = doubleAmount * -1;
     }
@@ -69,6 +66,7 @@ class MainScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     WidgetsBinding.instance
         .addPostFrameCallback((_) => _refreshIndicatorKey.currentState.show());
+    AmountDataField amountDataField = AmountDataField();
     return ChangeNotifierProvider(
         create: (context) => coffersApi,
         child: Scaffold(
@@ -80,23 +78,30 @@ class MainScreen extends StatelessWidget {
             backgroundColor: AppTheme.kPrimaryColor,
             body: RefreshIndicator(
               key: _refreshIndicatorKey,
+              //////////////// Fetching Data with every refresh
               onRefresh: _fetchData,
               child: SingleChildScrollView(
                 physics: ClampingScrollPhysics(),
                 child:
-                    Consumer<CoffersApi>(builder: (context, coffersApi, child) {
+                Consumer<CoffersApi>(builder: (context, coffersApi, child) {
+                  // Direct user to the Login Screen if failed to load main data
                   if (coffersApi.coffersLoading == CoffersLoading.Failed) {
                     UserPreferences().removeUser().then((value) =>
                         Navigator.of(context).pushAndRemoveUntil(
                             LoginScreen.route(), (route) => false));
                   }
+                  // Calculate The Four Treasuries (Abdelaziz, Bahaa, Ibrahim, Abdelrahman)
                   String treasuryTotal = "";
-                  if(coffersApi.coffersLoading == CoffersLoading.Succeed){
+                  if (coffersApi.coffersLoading == CoffersLoading.Succeed) {
                     double doubleTreasuryTotal;
-                    doubleTreasuryTotal = parseAmount(coffersApi.coffersResponseModel.ibrahimTreasury) +
-                        parseAmount(coffersApi.coffersResponseModel.abdelazizTreasury) +
-                        parseAmount(coffersApi.coffersResponseModel.bahaaTreasury) +
-                        parseAmount(coffersApi.coffersResponseModel.abdelrahmanTreasury);
+                    doubleTreasuryTotal = parseAmount(
+                        coffersApi.coffersResponseModel.ibrahimTreasury) +
+                        parseAmount(
+                            coffersApi.coffersResponseModel.abdelazizTreasury) +
+                        parseAmount(
+                            coffersApi.coffersResponseModel.bahaaTreasury) +
+                        parseAmount(coffersApi
+                            .coffersResponseModel.abdelrahmanTreasury);
                     treasuryTotal = doubleTreasuryTotal.toString();
                   }
                   return Column(
@@ -120,6 +125,7 @@ class MainScreen extends StatelessWidget {
                                         fontSize: 14,
                                         fontFamily: 'Cairo'),
                                   ),
+                                  ////////////// Current Data
                                   Text(
                                     DateFormat('yyyy/MM/dd')
                                         .format(DateTime.now()),
@@ -128,6 +134,7 @@ class MainScreen extends StatelessWidget {
                                         fontSize: 14,
                                         fontFamily: 'Cairo'),
                                   ),
+                                  ///////////// Current Time
                                   Text(
                                     DateFormat('h:mm').format(DateTime.now()),
                                     style: TextStyle(
@@ -136,6 +143,7 @@ class MainScreen extends StatelessWidget {
                                         fontFamily: 'Cairo'),
                                   ),
                                 ]),
+                            //////////////// Logging out
                             ElevatedButton(
                               onPressed: () {
                                 coffersApi.loggingOut();
@@ -167,14 +175,14 @@ class MainScreen extends StatelessWidget {
                                     height: 24,
                                     width: 24,
                                     child: AppLocalizations.of(context)
-                                                .localeName ==
-                                            'ar'
+                                        .localeName ==
+                                        'ar'
                                         ? Image.asset(
-                                            'assets/images/LOGOUT_AR.png',
-                                          )
+                                      'assets/images/LOGOUT_AR.png',
+                                    )
                                         : Image.asset(
-                                            'assets/images/LOGOUT_EN.png',
-                                          ),
+                                      'assets/images/LOGOUT_EN.png',
+                                    ),
                                   )
                                 ],
                               ),
@@ -194,398 +202,36 @@ class MainScreen extends StatelessWidget {
                         height: 48.0,
                       ),
                       ///////////////////////////////// Salaries
-                      Container(
-                        margin: EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 16.0),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(25.0)),
-                        child: Stack(
-                          alignment: AlignmentDirectional.center,
-                          children: [
-                            TextFormField(
-                              maxLines: 1,
-                              enabled: false,
-                              initialValue: " ",
-                              style: TextStyle(color: Colors.white),
-                              decoration: InputDecoration(
-                                contentPadding: EdgeInsets.only(
-                                    top: 11, bottom: 11, left: 16, right: 16),
-                                labelText:
-                                    AppLocalizations.of(context).salaries,
-                                labelStyle: TextStyle(
-                                  color: Colors.white,
-                                  letterSpacing: 2.0,
-                                  fontSize: 14,
-                                  fontFamily: 'Cairo',
-                                ),
-                                alignLabelWithHint: true,
-                                disabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(25.0),
-                                    borderSide: BorderSide(
-                                      color: Colors.white,
-                                    )),
-                              ),
-                            ),
-                            Align(
-                              alignment: Alignment.center,
-                              child: Container(
-                                child: coffersApi.coffersLoading ==
-                                        CoffersLoading.Succeed
-                                    ? Wrap(
-                                        crossAxisAlignment:
-                                            WrapCrossAlignment.center,
-                                        children: [
-                                          Localizations.override(
-                                            context: context,
-                                            locale: const Locale('en'),
-                                            child: Builder(builder:
-                                                (BuildContext context) {
-                                              return Text(
-                                                checkAmount(coffersApi
-                                                    .coffersResponseModel
-                                                    .salaries),
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 16,
-                                                    fontFamily: 'Cairo'),
-                                              );
-                                            }),
-                                          ),
-                                          SizedBox(
-                                            width: 4.0,
-                                          ),
-                                          Visibility(
-                                            visible: (parseAmount(coffersApi
-                                                        .coffersResponseModel
-                                                        .salaries) !=
-                                                    null) ==
-                                                (parseAmount(coffersApi
-                                                        .coffersResponseModel
-                                                        .salaries) !=
-                                                    0.0),
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                  color: isNegativeAmount(
-                                                          coffersApi
-                                                              .coffersResponseModel
-                                                              .salaries)
-                                                      ? const Color(0xffC70F0F)
-                                                      : const Color(0xff0FC73A),
-                                                  shape: BoxShape.circle),
-                                              child: isNegativeAmount(coffersApi
-                                                      .coffersResponseModel
-                                                      .salaries)
-                                                  ? Icon(
-                                                      Icons.remove,
-                                                      color: Colors.white,
-                                                      size: 14.0,
-                                                    )
-                                                  : Icon(
-                                                      Icons.add,
-                                                      color: Colors.white,
-                                                      size: 14.0,
-                                                    ),
-                                            ),
-                                          ),
-                                        ],
-                                      )
-                                    : Text(
-                                        '...',
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 16,
-                                            fontFamily: 'Cairo'),
-                                      ),
-                              ),
-                            ),
-                            Align(
-                              alignment:
-                                  AppLocalizations.of(context).localeName ==
-                                          'ar'
-                                      ? Alignment.centerLeft
-                                      : Alignment.centerRight,
-                              child: Container(
-                                margin:
-                                    EdgeInsets.only(right: 16.0, left: 16.0),
-                                child: Text(
-                                  AppLocalizations.of(context).saudiCurrency,
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 12,
-                                      fontFamily: 'Cairo'),
-                                ),
-                              ),
-                            ),
-                            Align(
-                              alignment:
-                                  AppLocalizations.of(context).localeName ==
-                                          'ar'
-                                      ? Alignment.centerRight
-                                      : Alignment.centerLeft,
-                              child: Container(
-                                margin:
-                                    EdgeInsets.only(right: 16.0, left: 16.0),
-                                child: Text(
-                                  coffersApi.coffersLoading ==
-                                          CoffersLoading.Succeed
-                                      ? coffersApi
-                                          .coffersResponseModel.salariesMonth
-                                      : '...',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontFamily: 'Cairo',
-                                      fontSize: 12),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                      coffersApi.coffersLoading == CoffersLoading.Succeed
+                          ? amountDataField.mainDataField(
+                          context: context,
+                          labelText: AppLocalizations.of(context).salaries,
+                          values: [
+                            coffersApi.coffersResponseModel.salaries,
+                            coffersApi.coffersResponseModel.salariesMonth
+                          ])
+                          : amountDataField.emptyMainDataField(
+                          context: context),
                       ///////////////////////////////// Bills
-                      Container(
-                        margin: EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 16.0),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(25.0)),
-                        child: Stack(
-                          alignment: AlignmentDirectional.center,
-                          children: [
-                            TextFormField(
-                              maxLines: 1,
-                              enabled: false,
-                              initialValue: " ",
-                              style: TextStyle(color: Colors.white),
-                              decoration: InputDecoration(
-                                contentPadding: EdgeInsets.only(
-                                    top: 11, bottom: 11, left: 16, right: 16),
-                                labelText: AppLocalizations.of(context).bills,
-                                labelStyle: TextStyle(
-                                  color: Colors.white,
-                                  letterSpacing: 2.0,
-                                  fontSize: 14,
-                                ),
-                                alignLabelWithHint: true,
-                                disabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(25.0),
-                                    borderSide: BorderSide(
-                                      color: Colors.white,
-                                    )),
-                              ),
-                            ),
-                            Align(
-                              alignment: Alignment.center,
-                              child: Container(
-                                child: coffersApi.coffersLoading ==
-                                        CoffersLoading.Succeed
-                                    ? Wrap(
-                                        crossAxisAlignment:
-                                            WrapCrossAlignment.center,
-                                        children: [
-                                          Localizations.override(
-                                            context: context,
-                                            locale: const Locale('en'),
-                                            child: Builder(builder:
-                                                (BuildContext context) {
-                                              return Text(
-                                                checkAmount(coffersApi
-                                                    .coffersResponseModel
-                                                    .bills),
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 16,
-                                                    fontFamily: 'Cairo'),
-                                              );
-                                            }),
-                                          ),
-                                          SizedBox(
-                                            width: 4.0,
-                                          ),
-                                          Visibility(
-                                            visible: (parseAmount(coffersApi
-                                                .coffersResponseModel
-                                                .bills) !=
-                                                null) ==
-                                                (parseAmount(coffersApi
-                                                    .coffersResponseModel
-                                                    .bills) !=
-                                                    0.0),
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                  color: isNegativeAmount(
-                                                          coffersApi
-                                                              .coffersResponseModel
-                                                              .bills)
-                                                      ? const Color(0xffC70F0F)
-                                                      : const Color(0xff0FC73A),
-                                                  shape: BoxShape.circle),
-                                              child: isNegativeAmount(coffersApi
-                                                      .coffersResponseModel
-                                                      .bills)
-                                                  ? Icon(
-                                                      Icons.remove,
-                                                      color: Colors.white,
-                                                      size: 14.0,
-                                                    )
-                                                  : Icon(
-                                                      Icons.add,
-                                                      color: Colors.white,
-                                                      size: 14.0,
-                                                    ),
-                                            ),
-                                          ),
-                                        ],
-                                      )
-                                    : Text(
-                                        '...',
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 16,
-                                            fontFamily: 'Cairo'),
-                                      ),
-                              ),
-                            ),
-                            Align(
-                              alignment:
-                                  AppLocalizations.of(context).localeName ==
-                                          'ar'
-                                      ? Alignment.centerLeft
-                                      : Alignment.centerRight,
-                              child: Container(
-                                margin:
-                                    EdgeInsets.only(right: 16.0, left: 16.0),
-                                child: Text(
-                                  AppLocalizations.of(context).saudiCurrency,
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 12.0),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                      coffersApi.coffersLoading == CoffersLoading.Succeed
+                          ? amountDataField.mainDataField(
+                          context: context,
+                          labelText: AppLocalizations.of(context).bills,
+                          values: [
+                            coffersApi.coffersResponseModel.bills,
+                          ])
+                          : amountDataField.emptyMainDataField(
+                          context: context),
                       ///////////////////////////////// Treasury
-                      Container(
-                        margin: EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 16.0),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(25.0)),
-                        child: Stack(
-                          alignment: AlignmentDirectional.center,
-                          children: [
-                            TextFormField(
-                              maxLines: 1,
-                              enabled: false,
-                              initialValue: " ",
-                              style: TextStyle(color: Colors.white),
-                              decoration: InputDecoration(
-                                contentPadding: EdgeInsets.only(
-                                    top: 11, bottom: 11, left: 16, right: 16),
-                                labelText:
-                                    AppLocalizations.of(context).treasury,
-                                labelStyle: TextStyle(
-                                  color: Colors.white,
-                                  letterSpacing: 2.0,
-                                  fontSize: 14,
-                                ),
-                                alignLabelWithHint: true,
-                                disabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(25.0),
-                                    borderSide: BorderSide(
-                                      color: Colors.white,
-                                    )),
-                              ),
-                            ),
-                            Align(
-                              alignment: Alignment.center,
-                              child: Container(
-                                child: coffersApi.coffersLoading ==
-                                        CoffersLoading.Succeed
-                                    ? Wrap(
-                                        crossAxisAlignment:
-                                            WrapCrossAlignment.center,
-                                        children: [
-                                          Localizations.override(
-                                            context: context,
-                                            locale: const Locale('en'),
-                                            child: Builder(builder:
-                                                (BuildContext context) {
-                                              return Text(
-                                                checkAmount(coffersApi
-                                                    .coffersResponseModel
-                                                    .treasury),
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 16,
-                                                    fontFamily: 'Cairo'),
-                                              );
-                                            }),
-                                          ),
-                                          SizedBox(
-                                            width: 4.0,
-                                          ),
-                                          Visibility(
-                                            visible: (parseAmount(coffersApi
-                                                .coffersResponseModel
-                                                .treasury) !=
-                                                null) ==
-                                                (parseAmount(coffersApi
-                                                    .coffersResponseModel
-                                                    .treasury) !=
-                                                    0.0),
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                  color: isNegativeAmount(
-                                                          coffersApi
-                                                              .coffersResponseModel
-                                                              .treasury)
-                                                      ? const Color(0xffC70F0F)
-                                                      : const Color(0xff0FC73A),
-                                                  shape: BoxShape.circle),
-                                              child: isNegativeAmount(coffersApi
-                                                      .coffersResponseModel
-                                                      .treasury)
-                                                  ? Icon(
-                                                      Icons.remove,
-                                                      color: Colors.white,
-                                                      size: 14.0,
-                                                    )
-                                                  : Icon(
-                                                      Icons.add,
-                                                      color: Colors.white,
-                                                      size: 14.0,
-                                                    ),
-                                            ),
-                                          ),
-                                        ],
-                                      )
-                                    : Text(
-                                        '...',
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 16,
-                                            fontFamily: 'Cairo'),
-                                      ),
-                              ),
-                            ),
-                            Align(
-                              alignment:
-                                  AppLocalizations.of(context).localeName ==
-                                          'ar'
-                                      ? Alignment.centerLeft
-                                      : Alignment.centerRight,
-                              child: Container(
-                                margin:
-                                    EdgeInsets.only(right: 16.0, left: 16.0),
-                                child: Text(
-                                  AppLocalizations.of(context).saudiCurrency,
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 12.0),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                      coffersApi.coffersLoading == CoffersLoading.Succeed
+                          ? amountDataField.mainDataField(
+                          context: context,
+                          labelText: AppLocalizations.of(context).treasury,
+                          values: [
+                            coffersApi.coffersResponseModel.treasury,
+                          ])
+                          : amountDataField.emptyMainDataField(
+                          context: context),
                       SizedBox(
                         height: 48.0,
                       ),
@@ -600,540 +246,59 @@ class MainScreen extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          ///////////////////////////////// Ibrahim
-                          Container(
-                            margin: EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 16.0),
-                            width: MediaQuery.of(context).size.width * 0.4,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(25.0)),
-                            child: Stack(
-                              alignment: AlignmentDirectional.center,
-                              children: [
-                                TextFormField(
-                                  maxLines: 1,
-                                  enabled: false,
-                                  initialValue: " ",
-                                  style: TextStyle(color: Colors.white),
-                                  decoration: InputDecoration(
-                                    contentPadding: EdgeInsets.only(
-                                        top: 56,
-                                        bottom: 56,
-                                        left: 16,
-                                        right: 16),
-                                    labelText:
-                                        AppLocalizations.of(context).ibrahim,
-                                    prefixIcon: SizedBox(
-                                      width:
-                                          (MediaQuery.of(context).size.width *
-                                                  0.4) *
-                                              0.2,
-                                    ),
-                                    labelStyle: TextStyle(
-                                      color: Colors.white,
-                                      letterSpacing: 2.0,
-                                      fontSize: 14,
-                                    ),
-                                    alignLabelWithHint: true,
-                                    disabledBorder: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(25.0),
-                                        borderSide: BorderSide(
-                                          color: Colors.white,
-                                        )),
-                                  ),
-                                ),
-                                Align(
-                                  alignment: Alignment.center,
-                                  child: Container(
-                                    child: coffersApi.coffersLoading ==
-                                            CoffersLoading.Succeed
-                                        ? Wrap(
-                                            crossAxisAlignment:
-                                                WrapCrossAlignment.center,
-                                            children: [
-                                              Localizations.override(
-                                                context: context,
-                                                locale: const Locale('en'),
-                                                child: Builder(builder:
-                                                    (BuildContext context) {
-                                                  return Text(
-                                                    checkAmount(coffersApi
-                                                        .coffersResponseModel
-                                                        .ibrahimTreasury),
-                                                    style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 16,
-                                                        fontFamily: 'Cairo'),
-                                                  );
-                                                }),
-                                              ),
-                                              SizedBox(
-                                                width: 4.0,
-                                              ),
-                                              Visibility(
-                                                visible: (parseAmount(coffersApi
-                                                    .coffersResponseModel
-                                                    .ibrahimTreasury) !=
-                                                    null) ==
-                                                    (parseAmount(coffersApi
-                                                        .coffersResponseModel
-                                                        .ibrahimTreasury) !=
-                                                        0.0),
-                                                child: Container(
-                                                  decoration: BoxDecoration(
-                                                      color: isNegativeAmount(
-                                                              coffersApi
-                                                                  .coffersResponseModel
-                                                                  .ibrahimTreasury)
-                                                          ? const Color(
-                                                              0xffC70F0F)
-                                                          : const Color(
-                                                              0xff0FC73A),
-                                                      shape: BoxShape.circle),
-                                                  child: isNegativeAmount(
-                                                          coffersApi
-                                                              .coffersResponseModel
-                                                              .ibrahimTreasury)
-                                                      ? Icon(
-                                                          Icons.remove,
-                                                          color: Colors.white,
-                                                          size: 14.0,
-                                                        )
-                                                      : Icon(
-                                                          Icons.add,
-                                                          color: Colors.white,
-                                                          size: 14.0,
-                                                        ),
-                                                ),
-                                              ),
-                                            ],
-                                          )
-                                        : Text(
-                                            '...',
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 16,
-                                                fontFamily: 'Cairo'),
-                                          ),
-                                  ),
-                                ),
-                                Align(
-                                  alignment: Alignment.center,
-                                  child: Container(
-                                    margin: EdgeInsets.only(top: 48.0),
-                                    child: Text(
-                                      AppLocalizations.of(context)
-                                          .saudiCurrency,
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 10),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          ///////////////////////////////// Abdelaziz
-                          Container(
-                            margin: EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 16.0),
-                            width: MediaQuery.of(context).size.width * 0.4,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(25.0)),
-                            child: Stack(
-                              alignment: AlignmentDirectional.center,
-                              children: [
-                                TextFormField(
-                                  maxLines: 1,
-                                  enabled: false,
-                                  initialValue: " ",
-                                  style: TextStyle(color: Colors.white),
-                                  decoration: InputDecoration(
-                                    contentPadding: EdgeInsets.only(
-                                        top: 56,
-                                        bottom: 56,
-                                        left: 16,
-                                        right: 16),
-                                    labelText:
-                                        AppLocalizations.of(context).abdelaziz,
-                                    prefixIcon: SizedBox(
-                                      width:
-                                          (MediaQuery.of(context).size.width *
-                                                  0.4) *
-                                              0.2,
-                                    ),
-                                    labelStyle: TextStyle(
-                                      color: Colors.white,
-                                      letterSpacing: 2.0,
-                                      fontSize: 14,
-                                    ),
-                                    alignLabelWithHint: true,
-                                    disabledBorder: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(25.0),
-                                        borderSide: BorderSide(
-                                          color: Colors.white,
-                                        )),
-                                  ),
-                                ),
-                                Align(
-                                  alignment: Alignment.center,
-                                  child: Container(
-                                    child: coffersApi.coffersLoading ==
-                                            CoffersLoading.Succeed
-                                        ? Wrap(
-                                            crossAxisAlignment:
-                                                WrapCrossAlignment.center,
-                                            children: [
-                                              Localizations.override(
-                                                context: context,
-                                                locale: const Locale('en'),
-                                                child: Builder(builder:
-                                                    (BuildContext context) {
-                                                  return Text(
-                                                    checkAmount(coffersApi
-                                                        .coffersResponseModel
-                                                        .abdelazizTreasury),
-                                                    style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 16,
-                                                        fontFamily: 'Cairo'),
-                                                  );
-                                                }),
-                                              ),
-                                              SizedBox(
-                                                width: 4.0,
-                                              ),
-                                              Visibility(
-                                                visible: (parseAmount(coffersApi
-                                                    .coffersResponseModel
-                                                    .abdelazizTreasury) !=
-                                                    null) ==
-                                                    (parseAmount(coffersApi
-                                                        .coffersResponseModel
-                                                        .abdelazizTreasury) !=
-                                                        0.0),
-                                                child: Container(
-                                                  decoration: BoxDecoration(
-                                                      color: isNegativeAmount(coffersApi
-                                                              .coffersResponseModel
-                                                              .abdelazizTreasury)
-                                                          ? const Color(
-                                                              0xffC70F0F)
-                                                          : const Color(
-                                                              0xff0FC73A),
-                                                      shape: BoxShape.circle),
-                                                  child: isNegativeAmount(
-                                                          coffersApi
-                                                              .coffersResponseModel
-                                                              .abdelazizTreasury)
-                                                      ? Icon(
-                                                          Icons.remove,
-                                                          color: Colors.white,
-                                                          size: 14.0,
-                                                        )
-                                                      : Icon(
-                                                          Icons.add,
-                                                          color: Colors.white,
-                                                          size: 14.0,
-                                                        ),
-                                                ),
-                                              ),
-                                            ],
-                                          )
-                                        : Text(
-                                            '...',
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 16,
-                                                fontFamily: 'Cairo'),
-                                          ),
-                                  ),
-                                ),
-                                Align(
-                                  alignment: Alignment.center,
-                                  child: Container(
-                                    margin: EdgeInsets.only(top: 48.0),
-                                    child: Text(
-                                      AppLocalizations.of(context)
-                                          .saudiCurrency,
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 10),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
+                          ///////////////////////////////// Ibrahim Treasury
+                          coffersApi.coffersLoading == CoffersLoading.Succeed
+                              ? amountDataField.individualDataField(
+                              context: context,
+                              individualName:
+                              AppLocalizations.of(context).ibrahim,
+                              values: [
+                                coffersApi
+                                    .coffersResponseModel.ibrahimTreasury
+                              ])
+                              : amountDataField.emptyIndividualDataField(
+                              context: context),
+                          ///////////////////////////////// Abdelaziz Treasury
+                          coffersApi.coffersLoading == CoffersLoading.Succeed
+                              ? amountDataField.individualDataField(
+                              context: context,
+                              individualName:
+                              AppLocalizations.of(context).abdelaziz,
+                              values: [
+                                coffersApi.coffersResponseModel
+                                    .abdelazizTreasury
+                              ])
+                              : amountDataField.emptyIndividualDataField(
+                              context: context),
                         ],
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          ///////////////////////////////// Bahaa
-                          Container(
-                            margin: EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 16.0),
-                            width: MediaQuery.of(context).size.width * 0.4,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(25.0)),
-                            child: Stack(
-                              alignment: AlignmentDirectional.center,
-                              children: [
-                                TextFormField(
-                                  maxLines: 1,
-                                  enabled: false,
-                                  initialValue: " ",
-                                  style: TextStyle(color: Colors.white),
-                                  decoration: InputDecoration(
-                                    contentPadding: EdgeInsets.only(
-                                        top: 56,
-                                        bottom: 56,
-                                        left: 16,
-                                        right: 16),
-                                    labelText:
-                                        AppLocalizations.of(context).bahaa,
-                                    prefixIcon: SizedBox(
-                                      width:
-                                          (MediaQuery.of(context).size.width *
-                                                  0.4) *
-                                              0.2,
-                                    ),
-                                    labelStyle: TextStyle(
-                                      color: Colors.white,
-                                      letterSpacing: 2.0,
-                                      fontSize: 14,
-                                    ),
-                                    alignLabelWithHint: true,
-                                    disabledBorder: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(25.0),
-                                        borderSide: BorderSide(
-                                          color: Colors.white,
-                                        )),
-                                  ),
-                                ),
-                                Align(
-                                  alignment: Alignment.center,
-                                  child: Container(
-                                    child: coffersApi.coffersLoading ==
-                                            CoffersLoading.Succeed
-                                        ? Wrap(
-                                            crossAxisAlignment:
-                                                WrapCrossAlignment.center,
-                                            children: [
-                                              Localizations.override(
-                                                context: context,
-                                                locale: const Locale('en'),
-                                                child: Builder(builder:
-                                                    (BuildContext context) {
-                                                  return Text(
-                                                    checkAmount(coffersApi
-                                                        .coffersResponseModel
-                                                        .bahaaTreasury),
-                                                    style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 16,
-                                                        fontFamily: 'Cairo'),
-                                                  );
-                                                }),
-                                              ),
-                                              SizedBox(
-                                                width: 4.0,
-                                              ),
-                                              Visibility(
-                                                visible: (parseAmount(coffersApi
-                                                    .coffersResponseModel
-                                                    .bahaaTreasury) !=
-                                                    null) ==
-                                                    (parseAmount(coffersApi
-                                                        .coffersResponseModel
-                                                        .bahaaTreasury) !=
-                                                        0.0),
-                                                child: Container(
-                                                  decoration: BoxDecoration(
-                                                      color: isNegativeAmount(
-                                                              coffersApi
-                                                                  .coffersResponseModel
-                                                                  .bahaaTreasury)
-                                                          ? const Color(
-                                                              0xffC70F0F)
-                                                          : const Color(
-                                                              0xff0FC73A),
-                                                      shape: BoxShape.circle),
-                                                  child: isNegativeAmount(
-                                                          coffersApi
-                                                              .coffersResponseModel
-                                                              .bahaaTreasury)
-                                                      ? Icon(
-                                                          Icons.remove,
-                                                          color: Colors.white,
-                                                          size: 14.0,
-                                                        )
-                                                      : Icon(
-                                                          Icons.add,
-                                                          color: Colors.white,
-                                                          size: 14.0,
-                                                        ),
-                                                ),
-                                              ),
-                                            ],
-                                          )
-                                        : Text(
-                                            '...',
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 16,
-                                                fontFamily: 'Cairo'),
-                                          ),
-                                  ),
-                                ),
-                                Align(
-                                  alignment: Alignment.center,
-                                  child: Container(
-                                    margin: EdgeInsets.only(top: 48.0),
-                                    child: Text(
-                                      AppLocalizations.of(context)
-                                          .saudiCurrency,
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 10),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          ///////////////////////////////// Abdelrahman
-                          Container(
-                            margin: EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 16.0),
-                            width: MediaQuery.of(context).size.width * 0.4,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(25.0)),
-                            child: Stack(
-                              alignment: AlignmentDirectional.center,
-                              children: [
-                                TextFormField(
-                                  maxLines: 1,
-                                  enabled: false,
-                                  initialValue: " ",
-                                  style: TextStyle(color: Colors.white),
-                                  decoration: InputDecoration(
-                                    contentPadding: EdgeInsets.only(
-                                        top: 56,
-                                        bottom: 56,
-                                        left: 16,
-                                        right: 16),
-                                    labelText: AppLocalizations.of(context)
-                                        .abdelrahman,
-                                    prefixIcon: SizedBox(
-                                      width:
-                                          (MediaQuery.of(context).size.width *
-                                                  0.4) *
-                                              0.2,
-                                    ),
-                                    labelStyle: TextStyle(
-                                      color: Colors.white,
-                                      letterSpacing: 2.0,
-                                      fontSize: 14,
-                                    ),
-                                    alignLabelWithHint: true,
-                                    disabledBorder: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(25.0),
-                                        borderSide: BorderSide(
-                                          color: Colors.white,
-                                        )),
-                                  ),
-                                ),
-                                Align(
-                                  alignment: Alignment.center,
-                                  child: Container(
-                                    child: coffersApi.coffersLoading ==
-                                            CoffersLoading.Succeed
-                                        ? Wrap(
-                                            crossAxisAlignment:
-                                                WrapCrossAlignment.center,
-                                            children: [
-                                              Localizations.override(
-                                                context: context,
-                                                locale: const Locale('en'),
-                                                child: Builder(builder:
-                                                    (BuildContext context) {
-                                                  return Text(
-                                                    checkAmount(coffersApi
-                                                        .coffersResponseModel
-                                                        .abdelrahmanTreasury),
-                                                    style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 16,
-                                                        fontFamily: 'Cairo'),
-                                                  );
-                                                }),
-                                              ),
-                                              SizedBox(
-                                                width: 4.0,
-                                              ),
-                                              Visibility(
-                                                visible: (parseAmount(coffersApi
-                                                    .coffersResponseModel
-                                                    .abdelrahmanTreasury) !=
-                                                    null) ==
-                                                    (parseAmount(coffersApi
-                                                        .coffersResponseModel
-                                                        .abdelrahmanTreasury) !=
-                                                        0.0),
-                                                child: Container(
-                                                  decoration: BoxDecoration(
-                                                      color: isNegativeAmount(coffersApi
-                                                              .coffersResponseModel
-                                                              .abdelrahmanTreasury)
-                                                          ? const Color(
-                                                              0xffC70F0F)
-                                                          : const Color(
-                                                              0xff0FC73A),
-                                                      shape: BoxShape.circle),
-                                                  child: isNegativeAmount(coffersApi
-                                                          .coffersResponseModel
-                                                          .abdelrahmanTreasury)
-                                                      ? Icon(
-                                                          Icons.remove,
-                                                          color: Colors.white,
-                                                          size: 14.0,
-                                                        )
-                                                      : Icon(
-                                                          Icons.add,
-                                                          color: Colors.white,
-                                                          size: 14.0,
-                                                        ),
-                                                ),
-                                              ),
-                                            ],
-                                          )
-                                        : Text(
-                                            '...',
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 16,
-                                                fontFamily: 'Cairo'),
-                                          ),
-                                  ),
-                                ),
-                                Align(
-                                  alignment: Alignment.center,
-                                  child: Container(
-                                    margin: EdgeInsets.only(top: 48.0),
-                                    child: Text(
-                                      AppLocalizations.of(context)
-                                          .saudiCurrency,
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 10),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
+                          ///////////////////////////////// Bahaa Treasury
+                          coffersApi.coffersLoading == CoffersLoading.Succeed
+                              ? amountDataField.individualDataField(
+                              context: context,
+                              individualName:
+                              AppLocalizations.of(context).bahaa,
+                              values: [
+                                coffersApi
+                                    .coffersResponseModel.bahaaTreasury
+                              ])
+                              : amountDataField.emptyIndividualDataField(
+                              context: context),
+                          ///////////////////////////////// Abdelrahman Treasury
+                          coffersApi.coffersLoading == CoffersLoading.Succeed
+                              ? amountDataField.individualDataField(
+                              context: context,
+                              individualName:
+                              AppLocalizations.of(context).abdelrahman,
+                              values: [
+                                coffersApi.coffersResponseModel
+                                    .abdelrahmanTreasury
+                              ])
+                              : amountDataField.emptyIndividualDataField(
+                              context: context),
                         ],
                       ),
                       SizedBox(
@@ -1147,7 +312,7 @@ class MainScreen extends StatelessWidget {
                       SizedBox(
                         height: 16.0,
                       ),
-                      //////////////////////////// Treasury Total
+                      //Treasury Total (Abdelaziz, Bahaa, Ibrahim, Abdelrahman)
                       Container(
                         margin: EdgeInsets.symmetric(horizontal: 16.0),
                         child: Row(
@@ -1164,60 +329,59 @@ class MainScreen extends StatelessWidget {
                             ),
                             coffersApi.coffersLoading == CoffersLoading.Succeed
                                 ? Wrap(
-                                    crossAxisAlignment:
-                                        WrapCrossAlignment.center,
-                                    children: [
-                                      Localizations.override(
-                                        context: context,
-                                        locale: const Locale('en'),
-                                        child: Builder(
-                                            builder: (BuildContext context) {
-                                          return Text(
-                                            checkAmount(treasuryTotal),
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 16,
-                                                fontFamily: 'Cairo'),
-                                          );
-                                        }),
-                                      ),
-                                      SizedBox(
-                                        width: 4.0,
-                                      ),
-                                      Visibility(
-                                        visible: (parseAmount(treasuryTotal) !=
-                                            null) ==
-                                            (parseAmount(treasuryTotal) !=
-                                                0.0),
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                              color:
-                                                  isNegativeAmount(treasuryTotal)
-                                                      ? const Color(0xffC70F0F)
-                                                      : const Color(0xff0FC73A),
-                                              shape: BoxShape.circle),
-                                          child: isNegativeAmount(treasuryTotal)
-                                              ? Icon(
-                                                  Icons.remove,
-                                                  color: Colors.white,
-                                                  size: 14.0,
-                                                )
-                                              : Icon(
-                                                  Icons.add,
-                                                  color: Colors.white,
-                                                  size: 14.0,
-                                                ),
-                                        ),
-                                      ),
-                                    ],
-                                  )
-                                : Text(
-                                    '...',
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 16,
-                                        fontFamily: 'Cairo'),
+                              crossAxisAlignment:
+                              WrapCrossAlignment.center,
+                              children: [
+                                Localizations.override(
+                                  context: context,
+                                  locale: const Locale('en'),
+                                  child: Builder(
+                                      builder: (BuildContext context) {
+                                        return Text(
+                                          checkAmount(treasuryTotal),
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 16,
+                                              fontFamily: 'Cairo'),
+                                        );
+                                      }),
+                                ),
+                                SizedBox(
+                                  width: 4.0,
+                                ),
+                                Visibility(
+                                  visible: (parseAmount(treasuryTotal) !=
+                                      null) ==
+                                      (parseAmount(treasuryTotal) != 0.0),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        color: isNegativeAmount(
+                                            treasuryTotal)
+                                            ? const Color(0xffC70F0F)
+                                            : const Color(0xff0FC73A),
+                                        shape: BoxShape.circle),
+                                    child: isNegativeAmount(treasuryTotal)
+                                        ? Icon(
+                                      Icons.remove,
+                                      color: Colors.white,
+                                      size: 14.0,
+                                    )
+                                        : Icon(
+                                      Icons.add,
+                                      color: Colors.white,
+                                      size: 14.0,
+                                    ),
                                   ),
+                                ),
+                              ],
+                            )
+                                : Text(
+                              '...',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontFamily: 'Cairo'),
+                            ),
                             SizedBox(
                               width: 16.0,
                             ),
@@ -1241,3 +405,4 @@ class MainScreen extends StatelessWidget {
             )));
   }
 }
+

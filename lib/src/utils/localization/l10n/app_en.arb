@@ -76,5 +76,9 @@
   "wrongNumber": "Wrong Number",
   "@wrongNumber": {
     "description": ""
+  },
+  "emptyField": "...",
+  "@emptyField": {
+    "description": ""
   }
 }
