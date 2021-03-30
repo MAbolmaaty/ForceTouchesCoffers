@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:force_touches_financial/app_theme.dart';
 
 class AmountDataField {
   String checkAmount(BuildContext context, String amount) {
@@ -186,10 +187,7 @@ class AmountDataField {
           Align(
             alignment: Alignment.center,
             child: Container(
-                child: Wrap(
-              crossAxisAlignment: WrapCrossAlignment.center,
-              children: [
-                Localizations.override(
+                child: Localizations.override(
                   context: context,
                   locale: const Locale('en'),
                   child: Builder(builder: (BuildContext context) {
@@ -201,12 +199,7 @@ class AmountDataField {
                           fontFamily: 'Cairo'),
                     );
                   }),
-                ),
-                SizedBox(
-                  width: 4.0,
-                ),
-              ],
-            )),
+                )),
           ),
           Align(
             alignment: AppLocalizations.of(context).localeName == 'ar'
@@ -230,172 +223,152 @@ class AmountDataField {
       {@required BuildContext context,
       @required String individualName,
       @required List<String> values}) {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 16.0),
-      width: MediaQuery.of(context).size.width * 0.4,
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(25.0)),
-      child: Stack(
-        alignment: AlignmentDirectional.center,
-        children: [
-          TextFormField(
-            maxLines: 1,
-            enabled: false,
-            style: TextStyle(color: Colors.white),
-            decoration: InputDecoration(
-              contentPadding:
-                  EdgeInsets.only(top: 56, bottom: 56, left: 0, right: (MediaQuery.of(context).size.width * 0.5)),
-              labelText: individualName,
-              // prefixIcon: SizedBox(
-              //   width: (MediaQuery.of(context).size.width * 0.4) / 2,
-              // ),
-              floatingLabelBehavior: FloatingLabelBehavior.always,
-              labelStyle: TextStyle(
-                color: Colors.white,
-                letterSpacing: 2.0,
-                fontSize: 14,
-              ),
-              disabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(25.0),
-                  borderSide: BorderSide(
-                    color: Colors.white,
-                  )),
-            ),
+    return Stack(
+      alignment: AlignmentDirectional.topCenter,
+      children: [
+        Container(
+          margin: EdgeInsets.symmetric(horizontal: 16, vertical: 16.0),
+          width: MediaQuery.of(context).size.width * 0.4,
+          height: MediaQuery.of(context).size.width * 0.4,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(24.0),
+            shape: BoxShape.rectangle,
+            border: Border.all(width: 0.8, color: Colors.white),
           ),
-          Align(
-            alignment: Alignment.center,
-            child: Container(
-              child: Wrap(
-                crossAxisAlignment: WrapCrossAlignment.center,
-                children: [
-                  Localizations.override(
-                    context: context,
-                    locale: const Locale('en'),
-                    child: Builder(builder: (BuildContext context) {
-                      return Text(
-                        checkAmount(context, values[0]),
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontFamily: 'Cairo'),
-                      );
-                    }),
-                  ),
-                  SizedBox(
-                    width: 4.0,
-                  ),
-                  Visibility(
-                    visible: (parseAmount(values[0]) != null) ==
-                        (parseAmount(values[0]) != 0.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                          color: isNegativeAmount(values[0])
-                              ? const Color(0xffC70F0F)
-                              : const Color(0xff0FC73A),
-                          shape: BoxShape.circle),
-                      child: isNegativeAmount(values[0])
-                          ? Icon(
-                              Icons.remove,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                child: Wrap(
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    Localizations.override(
+                      context: context,
+                      locale: const Locale('en'),
+                      child: Builder(builder: (BuildContext context) {
+                        return Text(
+                          checkAmount(context, values[0]),
+                          style: TextStyle(
                               color: Colors.white,
-                              size: 14.0,
-                            )
-                          : Icon(
-                              Icons.add,
-                              color: Colors.white,
-                              size: 14.0,
-                            ),
+                              fontSize: 16,
+                              fontFamily: 'Cairo'),
+                        );
+                      }),
                     ),
-                  ),
-                ],
+                    SizedBox(
+                      width: 4.0,
+                    ),
+                    Visibility(
+                      visible: (parseAmount(values[0]) != null) ==
+                          (parseAmount(values[0]) != 0.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color: isNegativeAmount(values[0])
+                                ? const Color(0xffC70F0F)
+                                : const Color(0xff0FC73A),
+                            shape: BoxShape.circle),
+                        child: isNegativeAmount(values[0])
+                            ? Icon(
+                                Icons.remove,
+                                color: Colors.white,
+                                size: 14.0,
+                              )
+                            : Icon(
+                                Icons.add,
+                                color: Colors.white,
+                                size: 14.0,
+                              ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
+              Container(
+                margin: (parseAmount(values[0]) != null) ==
+                        (parseAmount(values[0]) != 0.0)
+                    ? EdgeInsets.only(left: 14.0)
+                    : EdgeInsets.only(left: 0.0),
+                child: Text(
+                  AppLocalizations.of(context).saudiCurrency,
+                  style: TextStyle(color: Colors.white, fontSize: 10),
+                ),
+              ),
+            ],
           ),
-          Align(
-            alignment: Alignment.center,
-            child: Container(
-              margin: EdgeInsets.only(top: 48.0),
+        ),
+        Align(
+          alignment: Alignment.topCenter,
+          child: Container(
+              color: AppTheme.kPrimaryColor,
               child: Text(
-                AppLocalizations.of(context).saudiCurrency,
-                style: TextStyle(color: Colors.white, fontSize: 10),
-              ),
-            ),
-          ),
-        ],
-      ),
+                '  $individualName  ',
+                style: TextStyle(
+                  color: Colors.white,
+                  letterSpacing: 2.0,
+                  fontSize: 14,
+                ),
+              )),
+        ),
+      ],
     );
   }
 
-  Widget emptyIndividualDataField(
-      {@required BuildContext context}) {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 16.0),
-      width: MediaQuery.of(context).size.width * 0.4,
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(25.0)),
-      child: Stack(
-        alignment: AlignmentDirectional.center,
-        children: [
-          TextFormField(
-            maxLines: 1,
-            enabled: false,
-            style: TextStyle(color: Colors.white),
-            decoration: InputDecoration(
-              contentPadding:
-              EdgeInsets.only(top: 56, bottom: 56, left: 16, right: 16),
-              labelText: AppLocalizations.of(context).emptyField,
-              floatingLabelBehavior: FloatingLabelBehavior.always,
-              prefixIcon: SizedBox(
-                width: (MediaQuery.of(context).size.width * 0.4) * 0.2,
-              ),
-              labelStyle: TextStyle(
-                color: Colors.white,
-                letterSpacing: 2.0,
-                fontSize: 14,
-              ),
-              alignLabelWithHint: true,
-              disabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(25.0),
-                  borderSide: BorderSide(
-                    color: Colors.white,
-                  )),
-            ),
+  Widget emptyIndividualDataField({@required BuildContext context}) {
+    return Stack(
+      alignment: AlignmentDirectional.topCenter,
+      children: [
+        Container(
+          margin: EdgeInsets.symmetric(horizontal: 16, vertical: 16.0),
+          width: MediaQuery.of(context).size.width * 0.4,
+          height: MediaQuery.of(context).size.width * 0.4,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(24.0),
+            shape: BoxShape.rectangle,
+            border: Border.all(width: 0.8, color: Colors.white),
           ),
-          Align(
-            alignment: Alignment.center,
-            child: Container(
-              child: Wrap(
-                crossAxisAlignment: WrapCrossAlignment.center,
-                children: [
-                  Localizations.override(
-                    context: context,
-                    locale: const Locale('en'),
-                    child: Builder(builder: (BuildContext context) {
-                      return Text(
-                          AppLocalizations.of(context).emptyField,
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontFamily: 'Cairo'),
-                      );
-                    }),
-                  ),
-                  SizedBox(
-                    width: 4.0,
-                  ),
-                ],
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                child: Localizations.override(
+                  context: context,
+                  locale: const Locale('en'),
+                  child: Builder(builder: (BuildContext context) {
+                    return Text(
+                      AppLocalizations.of(context).emptyField,
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontFamily: 'Cairo'),
+                    );
+                  }),
+                ),
               ),
-            ),
-          ),
-          Align(
-            alignment: Alignment.center,
-            child: Container(
-              margin: EdgeInsets.only(top: 48.0),
-              child: Text(
+              Container(
+                child: Text(
                   AppLocalizations.of(context).emptyField,
-                style: TextStyle(color: Colors.white, fontSize: 10),
+                  style: TextStyle(color: Colors.white, fontSize: 10),
+                ),
               ),
-            ),
+            ],
           ),
-        ],
-      ),
+        ),
+        Align(
+          alignment: Alignment.topCenter,
+          child: Container(
+              color: AppTheme.kPrimaryColor,
+              child: Text(
+                '  ${AppLocalizations.of(context).emptyField}  ',
+                style: TextStyle(
+                  color: Colors.white,
+                  letterSpacing: 2.0,
+                  fontSize: 14,
+                ),
+              )),
+        ),
+      ],
     );
   }
 }

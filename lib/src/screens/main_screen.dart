@@ -26,41 +26,41 @@ class MainScreen extends StatelessWidget {
     });
   }
 
-  bool isNegativeAmount(String amount) {
-    return amount.contains(RegExp("- ?[0-9]|[0-9] ?-"));
-  }
-
-  String checkAmount(String amount) {
-    amount = amount.replaceAll(" ", "");
-    RegExp regExp = RegExp("[.|,]?\\d+[.|,]?");
-    var splits = regExp.allMatches(amount).toList();
-    String wholeNumber = "";
-    for (var split in splits) {
-      wholeNumber += split.group(0).toString();
-    }
-    if (parseAmount(wholeNumber) == null) wholeNumber = "...";
-
-    return wholeNumber;
-  }
-
-  double parseAmount(String amount) {
-    amount = amount.replaceAll(" ", "");
-    RegExp regExp = RegExp("[.]?\\d+[.]?");
-    bool isNegative = isNegativeAmount(amount);
-    var splits = regExp.allMatches(amount).toList();
-    String wholeNumber = "";
-    for (var split in splits) {
-      wholeNumber += split.group(0).toString();
-    }
-    double doubleAmount;
-    try {
-      doubleAmount = double.parse(wholeNumber);
-    } on Exception catch (e) {}
-    if (isNegative) {
-      doubleAmount = doubleAmount * -1;
-    }
-    return doubleAmount;
-  }
+  // bool isNegativeAmount(String amount) {
+  //   return amount.contains(RegExp("- ?[0-9]|[0-9] ?-"));
+  // }
+  //
+  // String checkAmount(String amount) {
+  //   amount = amount.replaceAll(" ", "");
+  //   RegExp regExp = RegExp("[.|,]?\\d+[.|,]?");
+  //   var splits = regExp.allMatches(amount).toList();
+  //   String wholeNumber = "";
+  //   for (var split in splits) {
+  //     wholeNumber += split.group(0).toString();
+  //   }
+  //   if (parseAmount(wholeNumber) == null) wholeNumber = "...";
+  //
+  //   return wholeNumber;
+  // }
+  //
+  // double parseAmount(String amount) {
+  //   amount = amount.replaceAll(" ", "");
+  //   RegExp regExp = RegExp("[.]?\\d+[.]?");
+  //   bool isNegative = isNegativeAmount(amount);
+  //   var splits = regExp.allMatches(amount).toList();
+  //   String wholeNumber = "";
+  //   for (var split in splits) {
+  //     wholeNumber += split.group(0).toString();
+  //   }
+  //   double doubleAmount;
+  //   try {
+  //     doubleAmount = double.parse(wholeNumber);
+  //   } on Exception catch (e) {}
+  //   if (isNegative) {
+  //     doubleAmount = doubleAmount * -1;
+  //   }
+  //   return doubleAmount;
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -94,13 +94,13 @@ class MainScreen extends StatelessWidget {
                   String treasuryTotal = "";
                   if (coffersApi.coffersLoading == CoffersLoading.Succeed) {
                     double doubleTreasuryTotal;
-                    doubleTreasuryTotal = parseAmount(
+                    doubleTreasuryTotal = amountDataField.parseAmount(
                         coffersApi.coffersResponseModel.ibrahimTreasury) +
-                        parseAmount(
+                        amountDataField.parseAmount(
                             coffersApi.coffersResponseModel.abdelazizTreasury) +
-                        parseAmount(
+                        amountDataField.parseAmount(
                             coffersApi.coffersResponseModel.bahaaTreasury) +
-                        parseAmount(coffersApi
+                        amountDataField.parseAmount(coffersApi
                             .coffersResponseModel.abdelrahmanTreasury);
                     treasuryTotal = doubleTreasuryTotal.toString();
                   }
@@ -338,7 +338,7 @@ class MainScreen extends StatelessWidget {
                                   child: Builder(
                                       builder: (BuildContext context) {
                                         return Text(
-                                          checkAmount(treasuryTotal),
+                                          amountDataField.checkAmount(context, treasuryTotal),
                                           style: TextStyle(
                                               color: Colors.white,
                                               fontSize: 16,
@@ -350,17 +350,17 @@ class MainScreen extends StatelessWidget {
                                   width: 4.0,
                                 ),
                                 Visibility(
-                                  visible: (parseAmount(treasuryTotal) !=
+                                  visible: (amountDataField.parseAmount(treasuryTotal) !=
                                       null) ==
-                                      (parseAmount(treasuryTotal) != 0.0),
+                                      (amountDataField.parseAmount(treasuryTotal) != 0.0),
                                   child: Container(
                                     decoration: BoxDecoration(
-                                        color: isNegativeAmount(
+                                        color: amountDataField.isNegativeAmount(
                                             treasuryTotal)
                                             ? const Color(0xffC70F0F)
                                             : const Color(0xff0FC73A),
                                         shape: BoxShape.circle),
-                                    child: isNegativeAmount(treasuryTotal)
+                                    child: amountDataField.isNegativeAmount(treasuryTotal)
                                         ? Icon(
                                       Icons.remove,
                                       color: Colors.white,
