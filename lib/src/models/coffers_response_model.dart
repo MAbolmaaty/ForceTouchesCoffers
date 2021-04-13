@@ -41,8 +41,8 @@ class CoffersResponseModel {
     bahaaTreasury = json['bahaa_treasury'];
     ibrahimTreasury = json['ibrahim_treasury'];
     publishedAt = json['published_at'];
-    createdAt = json['createdAt'];
-    updatedAt = json['updatedAt'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
     iV = json['__v'];
     id = json['id'];
   }
