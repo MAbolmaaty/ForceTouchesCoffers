@@ -8,7 +8,7 @@ class UserPreferences {
         await SharedPreferences.getInstance();
 
     sharedPreferences.setString('api_token', authenticationResponseModel.jwt);
-    sharedPreferences.setString(
+    sharedPreferences.setInt(
         'user_id', authenticationResponseModel.user.sId);
     sharedPreferences.setString(
         'username', authenticationResponseModel.user.username);
@@ -23,7 +23,7 @@ class UserPreferences {
         await SharedPreferences.getInstance();
 
     String apiToken = sharedPreferences.get('api_token');
-    String userId = sharedPreferences.get('user_id');
+    int userId = sharedPreferences.get('user_id');
     String username = sharedPreferences.getString('username');
     String email = sharedPreferences.getString('email');
 

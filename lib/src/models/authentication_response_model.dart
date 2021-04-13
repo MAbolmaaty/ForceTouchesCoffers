@@ -22,7 +22,7 @@ class AuthenticationResponseModel {
 class User {
   bool confirmed;
   bool blocked;
-  String sId;
+  int sId;
   String username;
   String email;
   String provider;
@@ -48,7 +48,7 @@ class User {
   User.fromJson(Map<String, dynamic> json) {
     confirmed = json['confirmed'];
     blocked = json['blocked'];
-    sId = json['_id'];
+    sId = json['id'];
     username = json['username'];
     email = json['email'];
     provider = json['provider'];
@@ -63,7 +63,7 @@ class User {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['confirmed'] = this.confirmed;
     data['blocked'] = this.blocked;
-    data['_id'] = this.sId;
+    data['id'] = this.sId;
     data['username'] = this.username;
     data['email'] = this.email;
     data['provider'] = this.provider;
@@ -79,7 +79,7 @@ class User {
 }
 
 class Role {
-  String sId;
+  int sId;
   String name;
   String description;
   String type;
@@ -89,7 +89,7 @@ class Role {
   Role({this.sId, this.name, this.description, this.type, this.iV, this.id});
 
   Role.fromJson(Map<String, dynamic> json) {
-    sId = json['_id'];
+    sId = json['id'];
     name = json['name'];
     description = json['description'];
     type = json['type'];
@@ -99,7 +99,7 @@ class Role {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['_id'] = this.sId;
+    data['id'] = this.sId;
     data['name'] = this.name;
     data['description'] = this.description;
     data['type'] = this.type;

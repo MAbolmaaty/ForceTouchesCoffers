@@ -32,6 +32,13 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
     super.initState();
   }
 
+
+  @override
+  void dispose() {
+    rotationController.dispose();
+    super.dispose();
+  }
+
   Future<Null> _fetchData() {
     return UserPreferences()
         .getUser()
