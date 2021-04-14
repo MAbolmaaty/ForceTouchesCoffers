@@ -8,7 +8,7 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="ماليات قوة"
+        android:label="Force Touches Accounting"
         android:icon="@mipmap/ic_launcher"
         android:usesCleartextTraffic="true">
         <activity
