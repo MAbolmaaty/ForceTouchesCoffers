@@ -89,7 +89,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                             coffersApi.coffersResponseModel.bahaaTreasury) +
                         amountDataField.parseAmount(coffersApi
                             .coffersResponseModel.abdelrahmanTreasury);
-                    treasuryTotal = doubleTreasuryTotal.toString();
+                    treasuryTotal = doubleTreasuryTotal.toStringAsFixed(2);
                   }
                   return Column(
                     children: <Widget>[
