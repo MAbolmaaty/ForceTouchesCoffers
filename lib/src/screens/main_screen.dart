@@ -24,6 +24,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   final CoffersApi coffersApi = CoffersApi();
 
   AnimationController rotationController;
+  String username;
 
   @override
   void initState() {
@@ -31,7 +32,6 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
         duration: const Duration(milliseconds: 1600), vsync: this);
     super.initState();
   }
-
 
   @override
   void dispose() {
@@ -43,6 +43,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
     return UserPreferences()
         .getUser()
         .then((authenticationResponseModel) async {
+          username = authenticationResponseModel.user.username;
       await coffersApi.fetchData(authenticationResponseModel.jwt);
       rotationController.forward(from: 0.0);
     });
@@ -142,48 +143,82 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                                   ),
                                 ]),
                             //////////////// Logging out
-                            ElevatedButton(
-                              onPressed: () {
-                                coffersApi.loggingOut();
-                                UserPreferences().removeUser().then((value) =>
-                                    Navigator.of(context).pushAndRemoveUntil(
-                                        LoginScreen.route(), (route) => false));
-                              },
-                              style: ElevatedButton.styleFrom(
-                                primary: AppTheme.kPrimaryColor,
-                                elevation: 0.0,
-                              ),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  SizedBox(
-                                    width: 8.0,
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                ElevatedButton(
+                                  onPressed: () {
+                                    coffersApi.loggingOut();
+                                    UserPreferences().removeUser().then(
+                                        (value) => Navigator.of(context)
+                                            .pushAndRemoveUntil(
+                                                LoginScreen.route(),
+                                                (route) => false));
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    primary: AppTheme.kPrimaryColor,
+                                    elevation: 0.0,
                                   ),
-                                  Text(
-                                    AppLocalizations.of(context).logout,
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        fontFamily: 'Cairo',
-                                        color: Colors.white),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      SizedBox(
+                                        width: 8.0,
+                                      ),
+                                      Text(
+                                        AppLocalizations.of(context).logout,
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            fontFamily: 'Cairo',
+                                            color: Colors.white),
+                                      ),
+                                      SizedBox(
+                                        width: 8.0,
+                                      ),
+                                      SizedBox(
+                                        height: 24,
+                                        width: 24,
+                                        child: AppLocalizations.of(context)
+                                                    .localeName ==
+                                                'ar'
+                                            ? Image.asset(
+                                                'assets/images/LOGOUT_AR.png',
+                                              )
+                                            : Image.asset(
+                                                'assets/images/LOGOUT_EN.png',
+                                              ),
+                                      )
+                                    ],
                                   ),
-                                  SizedBox(
-                                    width: 8.0,
-                                  ),
-                                  SizedBox(
-                                    height: 24,
-                                    width: 24,
-                                    child: AppLocalizations.of(context)
-                                                .localeName ==
-                                            'ar'
-                                        ? Image.asset(
-                                            'assets/images/LOGOUT_AR.png',
-                                          )
-                                        : Image.asset(
-                                            'assets/images/LOGOUT_EN.png',
+                                ),
+                                Visibility(
+                                  visible: username != null,
+                                  child: Container(
+                                    margin: EdgeInsets.symmetric(horizontal: 24.0),
+                                    child: Row(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          username?? "",
+                                          style: TextStyle(
+                                            fontSize: 12.0,
+                                            color: Colors.white,
+                                            fontFamily: 'Cairo',
                                           ),
-                                  )
-                                ],
-                              ),
+                                        ),
+                                        SizedBox(width: 4.0,),
+                                        Image.asset(
+                                          'assets/images/PROFILE_ICON.png',
+                                          height: 16,
+                                          width: 16,
+                                          color: Colors.white,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
@@ -199,7 +234,8 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                                 crossAxisAlignment: WrapCrossAlignment.center,
                                 children: [
                                   RotationTransition(
-                                    turns: Tween(begin: 0.0, end: 1.0).animate(rotationController),
+                                    turns: Tween(begin: 0.0, end: 1.0)
+                                        .animate(rotationController),
                                     child: Image.asset(
                                       'assets/images/LOGO_SMALL.png',
                                       height: 12,

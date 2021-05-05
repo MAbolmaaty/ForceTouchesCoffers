@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class LastUpdate {
+
   String getDate(String input) {
     RegExp regExp = RegExp("\\b(\\d{4}-\\d{2}-\\d{2})");
     String date = regExp.firstMatch(input).group(0).toString();
